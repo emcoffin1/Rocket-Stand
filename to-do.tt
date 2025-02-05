@@ -1,8 +1,11 @@
 fire tab
     user verification with user and pass
+    make json file to pull info and cross reference
 
 calibration maker
     input data and it makes the calibration equation
+    just need to make the actual math now
+
 
 convert file openers into video game like version
     when converted to exe, still able to write to json and csv

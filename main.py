@@ -5,7 +5,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTabWidget, QWidget, QLabel, QPushButton,
     QVBoxLayout, QHBoxLayout, QLineEdit, QFormLayout, QComboBox, QStackedWidget,
-    QTableWidget, QTableWidgetItem, QHeaderView
+    QTableWidget, QTableWidgetItem, QHeaderView, QFrame
 )
 from PyQt6.QtGui import QFont, QPixmap
 from wifi import ESP32Client
@@ -27,12 +27,14 @@ class MainWindow(QMainWindow):
 
         # Create Tabs
         self.home_page = HomePage()
+        self.fire_tab = FireTab(self.home_page)
         self.test_tab = TestTab(self.home_page)
         self.graphs_tab = ValuesTab(self.home_page)
         self.connections_tab = ConnectionsTab(self.home_page)
 
         # Add Tabs
         self.tabs.addTab(self.home_page, "Home")
+        self.tabs.addTab(self.fire_tab, "Fire")
         self.tabs.addTab(self.test_tab, "Tests")
         self.tabs.addTab(self.graphs_tab, "Values")
         self.tabs.addTab(self.connections_tab, "Settings")
@@ -79,6 +81,53 @@ class HomePage(QWidget):
         layout.addStretch(1)
         layout.addLayout(form_line)
         self.setLayout(layout)
+
+class FireTab(QWidget):
+    def __init__(self, home_page_instance):
+        super().__init__()
+        self.home_page = home_page_instance
+
+        # Frame
+        self.mainlayout = QVBoxLayout()
+        self.frame = QFrame(self)
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setStyleSheet("border: 0.25px solid black")
+
+        # Layout for Login Box
+        login_layout = QVBoxLayout()
+
+        # Form Layout
+        form = QFormLayout()
+
+        # Form objects
+        notice = misc.label_maker("Please LOGIN", size=15)
+
+        user = misc.label_maker("USERNAME:", size=12)
+        self.user_in = QLineEdit()
+        self.user_line = form.addRow(user, self.user_in)
+
+        passw = misc.label_maker("PASSWORD:", size=12)
+        self.pass_in = QLineEdit()
+        self.pass_line = form.addRow(passw,self.pass_in)
+
+        # Submit button
+        submit = QPushButton("Submit")
+        submit.clicked.connect(self.connect)
+
+
+        # Layout maker
+        login_layout.addWidget(notice, alignment=Qt.AlignmentFlag.AlignCenter)
+        login_layout.addLayout(form)
+        login_layout.addWidget(submit)
+        self.frame.setLayout(login_layout)
+        self.mainlayout.addWidget(self.frame, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.setLayout(self.mainlayout)
+
+    def connect(self):
+        """Send info for verification and launch fire system"""
+        user = self.user_in.text()
+        password = self.pass_in.text()
+        valid = misc.check_user(user, password)
 
 class TestTab(QWidget):
     def __init__(self, home_page_instance):

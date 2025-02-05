@@ -74,3 +74,6 @@ def horizontal_line():
     h_line = QFrame()
     h_line.setFrameShape(QFrame.Shape.HLine)
     return h_line
+
+def check_user(user, password):
+    pass
