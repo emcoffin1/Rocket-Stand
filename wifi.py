@@ -1,23 +1,28 @@
+import platform
 import socket
 import threading
-from PyQt6.QtCore import QObject, pyqtSignal, Qt
+import subprocess
+from PyQt6.QtCore import QObject, pyqtSignal
 
 ESP_IP = "192.168.4.1"  # ESP32 AP IP
 PORT = 80
 
 class ESP32Client(QObject):
     """Handles ESP32 connection, listening, and sending commands."""
-    message_received = pyqtSignal(str, arguments=["message"])  # Signal to update GUI when a new message is received
-    connection_status = pyqtSignal(bool, arguments=["is_connected"])  # Signal to update connection status in GUI
+    message_received = pyqtSignal(str)  # Signal to update GUI when a new message is received
+    connection_status = pyqtSignal(bool)  # Signal to update connection status in GUI
+
 
     def __init__(self):
         super().__init__()
         self.client = None
         self.running = True
+        self.listener_thread = None
 
 
     def is_esp32_connected(self):
         """Check if ESP32 is reachable before attempting connection."""
+
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(2)
@@ -31,16 +36,20 @@ class ESP32Client(QObject):
         """Establish connection to ESP32."""
         if self.is_esp32_connected():
             if self.client is None:
-                self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.client.connect((ESP_IP, PORT))
-                self.connection_status.emit(True)
+                try:
+                    self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.client.connect((ESP_IP, PORT))
+                    self.connection_status.emit(True)
 
-                if not hasattr(self, "listener_thread") or not self.listener_thread.is_alive():
-                    self.listener_thread = threading.Thread(target=self.listen_for_responses, daemon=True)
-                    self.listener_thread.start()
+                    if not hasattr(self, "listener_thread"):
+                        self.listener_thread = threading.Thread(target=self.listen_for_responses, daemon=True)
+                        self.listener_thread.start()
+                except Exception as e:
+                    print(f"[ERROR] Connection Failed: {e}")
             else:
-                print("[Warning] ESP32 is already connected.")
+                print("[WARNING] ESP32 is already connected.")
         else:
+            print("[WARNING] WiFi not available")
             self.connection_status.emit(False)
 
     def listen_for_responses(self):
@@ -51,8 +60,10 @@ class ESP32Client(QObject):
                     response = self.client.recv(1024).decode()
                     if response:
                         self.message_received.emit(response)  # Emit signal to update GUI
-                except Exception:
+                except Exception as e:
+                    print(f"[ERROR] Connection lost: {e}")
                     self.connection_status.emit(False)
+                    self.client = None
                     break  # Stop listening if connection is lost
 
     def send_command(self, message):
@@ -68,3 +79,4 @@ class ESP32Client(QObject):
         self.running = False
         if self.client:
             self.client.close()
+            self.client = None

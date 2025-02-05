@@ -130,31 +130,22 @@ class ConnectionsTab(QWidget):
         label.setFont(QFont("Helvetica", 20, QFont.Weight.Medium))
 
         # Form for connections
-        self.con_form_layout = QFormLayout()
+        self.connection_form_layout = QFormLayout()
 
 
         self.formline1 = QHBoxLayout()
         input1 = QLabel("Controller Connection:")
         self.status1 = QLabel("Disconnected")
         self.status1.setStyleSheet("Color: Red")
-        connect1 = QPushButton("Connect")
+        self.connect1 = QPushButton("Connect")
+        self.connect1.clicked.connect(self.connect_esp32)
         self.formline1.addWidget(input1)
         self.formline1.addWidget(self.status1)
         self.formline1.addStretch(1)
-        self.formline1.addWidget(connect1)
+        self.formline1.addWidget(self.connect1)
 
-        self.formline2 = QHBoxLayout()
-        input2 = QLabel("DAQ Connection:")
-        self.status2 = QLabel("Disconnected")
-        self.status2.setStyleSheet("Color: Red")
-        connect2 = QPushButton("Connect")
-        self.formline2.addWidget(input2)
-        self.formline2.addWidget(self.status2)
-        self.formline2.addStretch(1)
-        self.formline2.addWidget(connect2)
 
-        self.con_form_layout.addRow(self.formline1)
-        self.con_form_layout.addRow(self.formline2)
+        self.connection_form_layout.addRow(self.formline1)
 
         # Calibration Equation editor
         self.calib = QPushButton("Adjust Calibration Equations")
@@ -167,12 +158,12 @@ class ConnectionsTab(QWidget):
 
         # Connect Signals to Update GUI
         self.esp32_client.connection_status.connect(self.update_connection_status)
-        self.esp32_client.message_received.connect(self.display_esp32_message)
         self.connect_esp32()
+
 
         # Layout adjustments
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
-        layout.addLayout(self.con_form_layout)
+        layout.addLayout(self.connection_form_layout)
         layout.addStretch(1)
         layout.addWidget(self.calib, alignment=Qt.AlignmentFlag.AlignLeft)
         self.setLayout(layout)
@@ -187,7 +178,7 @@ class ConnectionsTab(QWidget):
 
     def connect_esp32(self):
         """Try connecting to ESP32."""
-        print("Connecting to esp32")
+        print("Attempting to connect to esp32")
         self.esp32_client.connect_to_esp32()
 
 
@@ -198,10 +189,14 @@ class ConnectionsTab(QWidget):
             print("Show connected")
             self.status1.setText("Connected")
             self.status1.setStyleSheet("Color: Green")
+            self.connect1.setEnabled(False)
+
         else:
             print("Not connected")
             self.status1.setText("Disconnected")
             self.status1.setStyleSheet("Color: Red")
+            self.connect1.setEnabled(True)
+
 
     def send_command(self, command):
         """Send a command to ESP32."""
