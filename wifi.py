@@ -33,7 +33,7 @@ class ESP32Client(QObject):
             if self.client is None:
                 self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.client.connect((ESP_IP, PORT))
-                self.connection_status.emit(True, Qt.ConnectionType.QueuedConnection)
+                self.connection_status.emit(True)
 
                 if not hasattr(self, "listener_thread") or not self.listener_thread.is_alive():
                     self.listener_thread = threading.Thread(target=self.listen_for_responses, daemon=True)
@@ -41,7 +41,7 @@ class ESP32Client(QObject):
             else:
                 print("[Warning] ESP32 is already connected.")
         else:
-            self.connection_status.emit(False, Qt.ConnectionType.QueuedConnection)
+            self.connection_status.emit(False)
 
     def listen_for_responses(self):
         """Continuously listen for messages from ESP32 and update GUI."""

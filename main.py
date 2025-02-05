@@ -164,11 +164,11 @@ class ConnectionsTab(QWidget):
 
         # ESP32 Client Instance
         self.esp32_client = ESP32Client()
-        self.esp32_client.connect_to_esp32()
 
         # Connect Signals to Update GUI
         self.esp32_client.connection_status.connect(self.update_connection_status)
         self.esp32_client.message_received.connect(self.display_esp32_message)
+        self.connect_esp32()
 
         # Layout adjustments
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
@@ -187,8 +187,9 @@ class ConnectionsTab(QWidget):
 
     def connect_esp32(self):
         """Try connecting to ESP32."""
-        self.esp32_client.connect_to_esp32()
         print("Connecting to esp32")
+        self.esp32_client.connect_to_esp32()
+
 
     def update_connection_status(self, is_connected):
         """Update connection status label."""
@@ -198,6 +199,7 @@ class ConnectionsTab(QWidget):
             self.status1.setText("Connected")
             self.status1.setStyleSheet("Color: Green")
         else:
+            print("Not connected")
             self.status1.setText("Disconnected")
             self.status1.setStyleSheet("Color: Red")
 
