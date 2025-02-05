@@ -1,14 +1,10 @@
 import random
-import sys
 from PyQt6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QComboBox, QLabel, QStackedWidget, QPushButton, QMessageBox, QHBoxLayout,
-    QFrame, QTableWidget, QHeaderView, QTableWidgetItem
+    QWidget, QVBoxLayout, QLabel, QPushButton, QMessageBox,
+    QTableWidget, QHeaderView, QTableWidgetItem
 )
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QFont, QColor, QBrush
-import pandas as pd
-from datetime import datetime
-from os import path
 import misc
 from controllers import CalibrationProcessor
 from wifi import ESP32Client
@@ -43,8 +39,7 @@ class LeakTestLayout(QWidget):
         layout = QVBoxLayout()
 
         # Test Title
-        label = QLabel("Leak Test")
-        label.setFont(QFont("Helvetica", 20, QFont.Weight.Medium))
+        label = misc.label_maker("Leak Test", weight=QFont.Weight.Medium)
 
         # Value Table
         self.table = QTableWidget(7,4)
@@ -62,19 +57,15 @@ class LeakTestLayout(QWidget):
         self.start_b.setStyleSheet('background-color: #BF1F0C; color: White')
         self.start_b.clicked.connect(self.confirm_start)
 
-        # Horizontal Line
-        h_line = QFrame()
-        h_line.setFrameShape(QFrame.Shape.HLine)
-
         # Timer
         self.test_timer = QLabel("0:00")
         self.test_timer.setFont(QFont("Arial", 20))
 
         # Stylize Layout
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
-        layout.addWidget(h_line)
+        layout.addWidget(misc.horizontal_line())
         layout.addWidget(self.table)
-        layout.addWidget(h_line)
+        layout.addWidget(misc.horizontal_line())
         layout.addWidget(self.test_timer, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addStretch(1)
         layout.addWidget(self.start_b, alignment=Qt.AlignmentFlag.AlignBottom)

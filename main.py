@@ -1,20 +1,13 @@
 import engine_tests, controllers
-import os.path
 import sys
 import misc
-import time
-import numpy as np
-import pandas as pd
-from datetime import datetime
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTabWidget, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QHBoxLayout, QStackedLayout, QLineEdit, QFormLayout, QComboBox, QStackedWidget,
+    QVBoxLayout, QHBoxLayout, QLineEdit, QFormLayout, QComboBox, QStackedWidget,
     QFrame, QTableWidget, QTableWidgetItem, QHeaderView, QCommandLinkButton
 )
-
-
-from PyQt6.QtGui import QFont, QPixmap, QIcon
+from PyQt6.QtGui import QFont, QPixmap
 from wifi import ESP32Client
 
 # Initialize Window
@@ -120,14 +113,11 @@ class ValuesTab(QWidget):
         super().__init__()
         self.home_page = home_page_instance
         layout = QVBoxLayout()
-        label = QLabel("Values")
-        label.setFont(QFont("Helvetica", 20, QFont.Weight.Medium))
+        label = misc.label_maker("Values")
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
 
         # Horizontal Seperator
-        h_line = QFrame()
-        h_line.setFrameShape(QFrame.Shape.HLine)
-        layout.addWidget(h_line)
+        layout.addWidget(misc.horizontal_line())
 
         # Table Layout
         tlayout = QHBoxLayout()
@@ -238,15 +228,10 @@ class ConnectionsTab(QWidget):
         label = QLabel("Connections and Settings")
         label.setFont(QFont("Helvetica", 20, QFont.Weight.Medium))
 
-        # Horizontal Seperator
-        h_line = QFrame()
-        h_line.setFrameShape(QFrame.Shape.HLine)
-
-
         # Form for connections
         self.connection_form_layout = QFormLayout()
 
-
+        # Form creation
         self.formline1 = QHBoxLayout()
         input1 = QLabel("Controller Connection:")
         self.status1 = QLabel("Disconnected")
@@ -277,7 +262,7 @@ class ConnectionsTab(QWidget):
 
         # Layout adjustments
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
-        layout.addWidget(h_line)
+        layout.addWidget(misc.horizontal_line())
         layout.addLayout(self.connection_form_layout)
         layout.addStretch(1)
         layout.addWidget(self.calib, alignment=Qt.AlignmentFlag.AlignLeft)
@@ -293,21 +278,17 @@ class ConnectionsTab(QWidget):
 
     def connect_esp32(self):
         """Try connecting to ESP32."""
-        print("Attempting to connect to esp32")
         self.esp32_client.connect_to_esp32()
 
 
     def update_connection_status(self, is_connected):
         """Update connection status label."""
-        print("Updating connection status")
         if is_connected:
-            print("Show connected")
             self.status1.setText("Connected")
             self.status1.setStyleSheet("Color: Green")
             self.connect1.setEnabled(False)
 
         else:
-            print("Not connected")
             self.status1.setText("Disconnected")
             self.status1.setStyleSheet("Color: Red")
             self.connect1.setEnabled(True)
@@ -316,10 +297,6 @@ class ConnectionsTab(QWidget):
     def send_command(self, command):
         """Send a command to ESP32."""
         self.esp32_client.send_command(command)
-
-    def display_esp32_message(self, message):
-        """Display ESP32 messages in GUI."""
-        print(f"[ESP32]: {message}")  # You can update this to display in a GUI element
 
 
 

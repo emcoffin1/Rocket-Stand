@@ -1,6 +1,8 @@
 from datetime import datetime
 import pandas as pd
 from os import path
+from PyQt6.QtWidgets import QLabel, QFrame
+from PyQt6.QtGui import QFont
 
 
 def event_logger(event, user, comments=''):
@@ -11,11 +13,11 @@ def event_logger(event, user, comments=''):
         user = user[0:10]
 
     # Access file
-    log_file = f'Loggers/event_log_{datetime.now().strftime("%Y-%m-%d")}.csv'
+    log_file = f'Loggers/event_log_{datetime.now().strftime('%Y-%m-%d')}.csv'
 
     # Format new entry
     new_entry = pd.DataFrame({
-        "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+        "Timestamp": [datetime.now().strftime('%Y-%m-%d %H:%M:%S')],
         "User": [f"    {user}"],
         "Event": [f"    {event}"],
         "Comments": [f"    {comments}"]
@@ -31,10 +33,10 @@ def event_logger(event, user, comments=''):
 
 def data_logger(calibrated_data):
     """Logs calibrated data when record data turned on"""
-    log_file = f"Loggers/data_log_{datetime.now().strftime("%Y-%m-%d")}.csv"
+    log_file = f"Loggers/data_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
 
     new_entry = pd.DataFrame({
-        "": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+        "": [datetime.now().strftime('%Y-%m-%d %H:%M:%S')],
         "LOX Vent": [calibrated_data.get("LOX Vent", "")],
         "Fuel Vent": [calibrated_data.get("Fuel Vent", "")],
         "LOX Dome Vent": [calibrated_data.get("LOX Dome Vent", "")],
@@ -59,3 +61,14 @@ def get_name(home_page_instance):
     # Access the QLineEdit text from HomePage
     name = home_page_instance.line_edit.text()
     return name
+
+
+def label_maker(input, style="Helvetica", size=20, weight=QFont.Weight.Medium):
+    label = QLabel(input)
+    label.setFont(QFont(style, size, weight))
+    return label
+
+def horizontal_line():
+    h_line = QFrame()
+    h_line.setFrameShape(QFrame.Shape.HLine)
+    return h_line

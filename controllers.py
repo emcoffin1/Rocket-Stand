@@ -1,11 +1,6 @@
 import json
-from datetime import datetime
-import os
-import sys
-import socket
 import misc
-from subprocess import run
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QLabel, QPushButton, QTextEdit, QFileDialog, QMessageBox)
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QTextEdit, QFileDialog, QMessageBox)
 
 
 
