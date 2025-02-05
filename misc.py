@@ -13,7 +13,7 @@ def event_logger(event, user, comments=''):
         user = user[0:10]
 
     # Access file
-    log_file = f'Loggers/event_log_{datetime.now().strftime('%Y-%m-%d')}.csv'
+    log_file = f"Loggers/event_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
 
     # Format new entry
     new_entry = pd.DataFrame({
@@ -63,9 +63,11 @@ def get_name(home_page_instance):
     return name
 
 
-def label_maker(input, style="Helvetica", size=20, weight=QFont.Weight.Medium):
+def label_maker(input, style="Helvetica", size=20, weight=QFont.Weight.Medium, ital=False):
     label = QLabel(input)
-    label.setFont(QFont(style, size, weight))
+    font = QFont(style, size, weight)
+    font.setItalic(ital)
+    label.setFont(font)
     return label
 
 def horizontal_line():

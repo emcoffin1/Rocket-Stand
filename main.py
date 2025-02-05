@@ -5,10 +5,11 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTabWidget, QWidget, QLabel, QPushButton,
     QVBoxLayout, QHBoxLayout, QLineEdit, QFormLayout, QComboBox, QStackedWidget,
-    QFrame, QTableWidget, QTableWidgetItem, QHeaderView, QCommandLinkButton
+    QTableWidget, QTableWidgetItem, QHeaderView
 )
 from PyQt6.QtGui import QFont, QPixmap
 from wifi import ESP32Client
+
 
 # Initialize Window
 class MainWindow(QMainWindow):
@@ -48,23 +49,20 @@ class HomePage(QWidget):
         self.bgd_l.setFixedSize(120, 100)
 
         # Title and Subtitle
-        self.title = QLabel("FARTS")
+        self.title = misc.label_maker("FARTS", size=40, weight=QFont.Weight.DemiBold)
         self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title.setFont(QFont("Times", 40, QFont.Weight.DemiBold))
-        # self.title.setStyleSheet("color: Blue")
 
-        self.subtitle = QLabel('Fuel and Rocket Test Stand')
+        self.subtitle = misc.label_maker("Fuel and Rocket Test Stand", size=15,
+                                         weight=QFont.Weight.ExtraLight, ital=True)
         self.subtitle.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        subt_font = QFont("Helvetica", 15, QFont.Weight.ExtraLight)
-        subt_font.setItalic(True)
-        self.subtitle.setFont(subt_font)
 
         # Current User Input Form using QFormLayout
         form_line = QFormLayout()
         form_line.setSpacing(2)
         user_message = QLabel("Current User:")
 
-        # Store QLineEdit as an attribute so it can be accessed later
+        # Store QLineEdit as an attribute, so it can be accessed later
         self.line_edit = QLineEdit()
         self.line_edit.setPlaceholderText("Name")
         self.line_edit.setFixedWidth(150)
@@ -249,6 +247,8 @@ class ConnectionsTab(QWidget):
         # Calibration Equation editor
         self.calib = QPushButton("Adjust Calibration Equations")
         self.calib.clicked.connect(self.open_editor)
+        self.calib_maker = QPushButton("Create Calibration Equations")
+        self.calib_maker.clicked.connect(self.open_maker)
 
         self.calib_editor = None
 
@@ -266,6 +266,7 @@ class ConnectionsTab(QWidget):
         layout.addLayout(self.connection_form_layout)
         layout.addStretch(1)
         layout.addWidget(self.calib, alignment=Qt.AlignmentFlag.AlignLeft)
+        layout.addWidget(self.calib_maker, alignment=Qt.AlignmentFlag.AlignLeft)
         self.setLayout(layout)
 
     def open_editor(self):
@@ -275,6 +276,13 @@ class ConnectionsTab(QWidget):
             return
         self.calib_editor = controllers.CalibrationEditor(self.home_page)
         self.calib_editor.show()
+
+    def open_maker(self):
+        if self.calib_maker and self.calib_maker.isVisible():
+            self.calib_maker.raise_()
+            return
+        self.calib_maker = controllers.CalibrationMaker()
+        self.calib_maker.show()
 
     def connect_esp32(self):
         """Try connecting to ESP32."""

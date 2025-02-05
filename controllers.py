@@ -1,6 +1,86 @@
 import json
 import misc
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QTextEdit, QFileDialog, QMessageBox)
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QPushButton,
+                             QTextEdit, QFileDialog, QMessageBox, QHBoxLayout, QLineEdit)
+
+
+
+class CalibrationMaker(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Calibrator")
+        self.resize(400,400)
+
+        # Forms vertical input layout
+        over_lay = QVBoxLayout()
+        title = misc.label_maker("Calibration")
+        # Forms horizontal layout
+        layout = QHBoxLayout()
+
+        # Form vertical layouts
+        x_layout = QVBoxLayout()
+        self.x_inputs = []
+        y_layout = QVBoxLayout()
+        self.y_inputs = []
+
+        # Make X inputs
+        for i in range(10):
+            x_lineedit = QLineEdit()
+            self.x_inputs.append(x_lineedit)
+            x_layout.addWidget(x_lineedit)
+        # Make Y Inputs
+        for i in range(10):
+            y_lineedit = QLineEdit()
+            self.y_inputs.append(y_lineedit)
+            y_layout.addWidget(y_lineedit)
+
+
+        # Paste Equation
+        self.equation = misc.label_maker("")
+
+        # Submit
+        self.submit = QPushButton("Submit")
+
+        # Format
+        over_lay.addWidget(title)
+        over_lay.addWidget(misc.horizontal_line())
+
+        layout.addStretch(2)
+        layout.addLayout(x_layout)
+        layout.addStretch(1)
+        layout.addLayout(y_layout)
+        layout.addStretch(2)
+        over_lay.addLayout(layout)
+
+        over_lay.addStretch(1)
+        over_lay.addWidget(self.equation)
+        over_lay.addStretch(1)
+        over_lay.addWidget(self.submit)
+
+        self.setLayout(over_lay)
+
+
+
+
+
+    def retrieve_inputs(self):
+        x_values = [values.text() for values in self.x_inputs]
+        y_values = [values.text() for values in self.y_inputs]
+
+        x_floats = []
+        y_floats = []
+        for x in x_values:
+            try:
+                x_floats.append(float(x))
+            except ValueError:
+                QMessageBox.warning(self, "Value Error", "Input numbers only")
+
+        for y in y_values:
+            try:
+                y_floats.append(float(y))
+            except ValueError:
+                QMessageBox.warning(self, "Value Error", "Input numbers only")
+        return x_floats, y_floats
 
 
 

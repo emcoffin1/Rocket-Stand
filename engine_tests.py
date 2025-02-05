@@ -39,7 +39,7 @@ class LeakTestLayout(QWidget):
         layout = QVBoxLayout()
 
         # Test Title
-        label = misc.label_maker("Leak Test", weight=QFont.Weight.Medium)
+        label = misc.label_maker("Leak Test")
 
         # Value Table
         self.table = QTableWidget(7,4)
