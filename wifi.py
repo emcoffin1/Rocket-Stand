@@ -1,8 +1,9 @@
-import platform
 import socket
 import threading
-import subprocess
+import json
 from PyQt6.QtCore import QObject, pyqtSignal
+
+import misc
 
 ESP_IP = "192.168.4.1"  # ESP32 AP IP
 PORT = 80
@@ -40,12 +41,14 @@ class ESP32Client(QObject):
                     self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.client.connect((ESP_IP, PORT))
                     self.connection_status.emit(True)
+                    misc.event_logger("WiFi Connected", "SYSTEM")
 
                     if not hasattr(self, "listener_thread"):
                         self.listener_thread = threading.Thread(target=self.listen_for_responses, daemon=True)
                         self.listener_thread.start()
                 except Exception as e:
                     print(f"[ERROR] Connection Failed: {e}")
+                    misc.event_logger("WiFi Connection Failed", "SYSTEM")
             else:
                 print("[WARNING] ESP32 is already connected.")
         else:
@@ -54,12 +57,46 @@ class ESP32Client(QObject):
 
     def listen_for_responses(self):
         """Continuously listen for messages from ESP32 and update GUI."""
+        calibration_file = "Loggers/calibration.json"
+        try:
+            with open(calibration_file, 'r') as file:
+                calibration_data = json.load(file)
+
+        except Exception as e:
+            print(f"[ERROR] Failed to load calibration file: {e}")
+            calibration_data = {}
+
+
         while self.running:
             if self.client:
                 try:
                     response = self.client.recv(1024).decode()
                     if response:
-                        self.message_received.emit(response)  # Emit signal to update GUI
+                        try:
+                            raw_data = json.loads(response)
+                            print(f"[DEBUG] Raw Sensor Data: {raw_data}")
+
+                            calibrated_data = {}
+                            for sensor, value in raw_data.items():
+                                if sensor in calibration_data:
+                                    equation = calibration_data[sensor]
+                                    try:
+                                        x = value
+                                        calibrated_data[sensor] = eval(equation)
+                                    except Exception as e:
+                                        print(f"[ERROR] Calibration Failed for {sensor}: {e}")
+                                        calibrated_data[sensor] = value
+                                else:
+                                    calibration_data[sensor] = value
+
+                            print(f"[DEBUG] Calibratied Data: {calibration_data}")
+
+                            # Emits structured, calibrated data to update table
+                            self.message_received.emit(calibration_data)
+
+                        except json.JSONDecodeError:
+                            print(f'[WARNING] Recieved malformed data: {response}')
+
                 except Exception as e:
                     print(f"[ERROR] Connection lost: {e}")
                     self.connection_status.emit(False)

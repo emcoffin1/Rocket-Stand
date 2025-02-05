@@ -157,6 +157,7 @@ class ValuesTab(QWidget):
             QPushButton {background-color: #D86456; color: White;}
             QPushButton:hover {background-color: #AD4242; color: #AD4242;}
             """)
+        self.is_recording = False
 
 
         # Layout
@@ -169,6 +170,44 @@ class ValuesTab(QWidget):
         layout.addWidget(self.record)
         self.setLayout(layout)
 
+    def display_data(self, calibrated_data):
+        """Updates table cell with calibrated data"""
+
+        # Map sensor names to table rows
+        left_tablemap = {
+            "LOX Vent": 0,
+            "Fuel Vent": 1,
+            "LOX Dome Vent": 2,
+            "LOX Dome Reg": 3,
+            "Fuel Dome Vent": 4
+        }
+        right_tablemap = {
+            "Fuel Dome Reg": 0,
+            "LOX MV": 1,
+            "FUEL MV": 2,
+            "High Pressure": 3,
+            "High Vent": 4
+        }
+
+        for sensor, value in calibrated_data.items():
+            formatted_value = f"{value:.2f}"
+
+            # Update left table
+            if sensor in left_tablemap:
+                # Get index of sensor
+                row = left_tablemap[sensor]
+                # index, column, value
+                self.leftTable.setItem(row, 1, QTableWidgetItem(formatted_value))
+
+            # Update right table
+            elif sensor in right_tablemap:
+                row = right_tablemap[sensor]
+                self.rightTable.setItem(row, 1, QTableWidgetItem(formatted_value))
+
+            # If Record Data Clicked
+            if self.is_recording:
+                misc.data_logger(calibrated_data)
+
 
     def record_data(self):
         """Starts and Stops data recording"""
@@ -179,7 +218,7 @@ class ValuesTab(QWidget):
             """)
             self.record.setText("Stop Recording")
             misc.event_logger("Recording Started", misc.get_name(self.home_page))
-
+            self.is_recording = True
 
         else:
             self.record.setText("Record Data")
@@ -188,7 +227,7 @@ class ValuesTab(QWidget):
             QPushButton:hover {background-color: #AD4242; color: #AD4242;}
             """)
             misc.event_logger("Recording Stopped", misc.get_name(self.home_page))
-
+            self.is_recording = False
 
 class ConnectionsTab(QWidget):
     def __init__(self, home_page_instance):

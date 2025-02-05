@@ -29,21 +29,22 @@ def event_logger(event, user, comments=''):
     updated_data.to_csv(log_file, index=False)
 
 
-def data_logger():
+def data_logger(calibrated_data):
+    """Logs calibrated data when record data turned on"""
     log_file = f"Loggers/data_log_{datetime.now().strftime("%Y-%m-%d")}.csv"
 
     new_entry = pd.DataFrame({
         "": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
-        "LOX Vent": [],
-        "Fuel Vent": [],
-        "LOX Dome Vent": [],
-        "LOX Dome Reg": [],
-        "Fuel Dome Vent": [],
-        "Fuel Dome Reg": [],
-        "LOX MV": [],
-        "Fuel MV": [],
-        "High Pres": [],
-        "High Vent": [],
+        "LOX Vent": [calibrated_data.get("LOX Vent", "")],
+        "Fuel Vent": [calibrated_data.get("Fuel Vent", "")],
+        "LOX Dome Vent": [calibrated_data.get("LOX Dome Vent", "")],
+        "LOX Dome Reg": [calibrated_data.get("LOX Dome Reg", "")],
+        "Fuel Dome Vent": [calibrated_data.get("Fuel Dome Vent", "")],
+        "Fuel Dome Reg": [calibrated_data.get("Fuel Dome Reg", "")],
+        "LOX MV": [calibrated_data.get("LOX MV", "")],
+        "Fuel MV": [calibrated_data.get("Fuel MV", "")],
+        "High Pressure": [calibrated_data.get("High Pressure", "")],
+        "High Vent": [calibrated_data.get("High Vent", "")],
     })
 
     if path.exists(log_file):
