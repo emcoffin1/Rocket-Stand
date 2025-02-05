@@ -28,6 +28,32 @@ def event_logger(event, user, comments=''):
         updated_data = new_entry
     updated_data.to_csv(log_file, index=False)
 
+
+def data_logger():
+    log_file = f"Loggers/data_log_{datetime.now().strftime("%Y-%m-%d")}.csv"
+
+    new_entry = pd.DataFrame({
+        "": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+        "LOX Vent": [],
+        "Fuel Vent": [],
+        "LOX Dome Vent": [],
+        "LOX Dome Reg": [],
+        "Fuel Dome Vent": [],
+        "Fuel Dome Reg": [],
+        "LOX MV": [],
+        "Fuel MV": [],
+        "High Pres": [],
+        "High Vent": [],
+    })
+
+    if path.exists(log_file):
+        existed_data = pd.read_csv(log_file)
+        updated_data = pd.concat([existed_data, new_entry], ignore_index=True)
+    else:
+        updated_data = new_entry
+    updated_data.to_csv(log_file, index=False)
+
+
 def get_name(home_page_instance):
     # Access the QLineEdit text from HomePage
     name = home_page_instance.line_edit.text()

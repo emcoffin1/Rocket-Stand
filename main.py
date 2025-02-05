@@ -10,9 +10,11 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTabWidget, QWidget, QLabel, QPushButton,
     QVBoxLayout, QHBoxLayout, QStackedLayout, QLineEdit, QFormLayout, QComboBox, QStackedWidget,
-    QFrame
+    QFrame, QTableWidget, QTableWidgetItem, QHeaderView, QCommandLinkButton
 )
-from PyQt6.QtGui import QFont, QPixmap
+
+
+from PyQt6.QtGui import QFont, QPixmap, QIcon
 from wifi import ESP32Client
 
 # Initialize Window
@@ -32,13 +34,13 @@ class MainWindow(QMainWindow):
         # Create Tabs
         self.home_page = HomePage()
         self.test_tab = TestTab(self.home_page)
-        self.graphs_tab = GraphsTab(self.home_page)
+        self.graphs_tab = ValuesTab(self.home_page)
         self.connections_tab = ConnectionsTab(self.home_page)
 
         # Add Tabs
         self.tabs.addTab(self.home_page, "Home")
         self.tabs.addTab(self.test_tab, "Tests")
-        self.tabs.addTab(self.graphs_tab, "Graphs")
+        self.tabs.addTab(self.graphs_tab, "Values")
         self.tabs.addTab(self.connections_tab, "Settings")
 
 class HomePage(QWidget):
@@ -113,12 +115,80 @@ class TestTab(QWidget):
     def switch_test(self, index):
         self.stacked_widget.setCurrentIndex(index)
 
-class GraphsTab(QWidget):
+class ValuesTab(QWidget):
     def __init__(self, home_page_instance):
         super().__init__()
+        self.home_page = home_page_instance
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("GRAPHs"))
+        label = QLabel("Values")
+        label.setFont(QFont("Helvetica", 20, QFont.Weight.Medium))
+        layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
+
+        # Horizontal Seperator
+        h_line = QFrame()
+        h_line.setFrameShape(QFrame.Shape.HLine)
+        layout.addWidget(h_line)
+
+        # Table Layout
+        tlayout = QHBoxLayout()
+
+        # Left Side Table
+        self.leftTable = QTableWidget(5,1)
+        self.leftTable.setVerticalHeaderLabels(["LOX Vent", "Fuel Vent", "LOX Dome Vent",
+                                                "LOX Dome Reg", "Fuel Dome Vent"])
+        self.leftTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.leftTable.horizontalHeader().setVisible(False)
+        self.leftTable.verticalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignRight)
+
+        # Right Side Table
+        self.rightTable = QTableWidget(5, 1)
+        self.rightTable.setVerticalHeaderLabels(["Fuel Dome Reg", "LOX MV", "FUEL MV",
+                                                "High Pressure", "High Vent"])
+        self.rightTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.rightTable.horizontalHeader().setVisible(False)
+        self.rightTable.verticalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignRight)
+
+        # Record Data Button
+        self.record = QPushButton("Record Data")
+        self.record.clicked.connect(self.record_data)
+        self.record.setMinimumHeight(50)
+        self.record.setFont(QFont('Helvetica', 20, QFont.Weight.Bold))
+        self.record.setStyleSheet("""
+            QPushButton {background-color: #D86456; color: White;}
+            QPushButton:hover {background-color: #AD4242; color: #AD4242;}
+            """)
+
+
+        # Layout
+        tlayout.addStretch(1)
+        tlayout.addWidget(self.leftTable)
+        tlayout.addWidget(self.rightTable)
+        tlayout.addStretch(1)
+        layout.addLayout(tlayout)
+        layout.addStretch(1)
+        layout.addWidget(self.record)
         self.setLayout(layout)
+
+
+    def record_data(self):
+        """Starts and Stops data recording"""
+        if self.record.text() == "Record Data":
+            self.record.setStyleSheet("""
+            QPushButton {background-color: #858585; color: White;}
+            QPushButton:hover {background-color: #AD4242; color: #AD4242;}
+            """)
+            self.record.setText("Stop Recording")
+            misc.event_logger("Recording Started", misc.get_name(self.home_page))
+
+
+        else:
+            self.record.setText("Record Data")
+            self.record.setStyleSheet("""
+            QPushButton {background-color: #D86456; color: White;}
+            QPushButton:hover {background-color: #AD4242; color: #AD4242;}
+            """)
+            misc.event_logger("Recording Stopped", misc.get_name(self.home_page))
+
 
 class ConnectionsTab(QWidget):
     def __init__(self, home_page_instance):
@@ -128,6 +198,11 @@ class ConnectionsTab(QWidget):
         # Title
         label = QLabel("Connections and Settings")
         label.setFont(QFont("Helvetica", 20, QFont.Weight.Medium))
+
+        # Horizontal Seperator
+        h_line = QFrame()
+        h_line.setFrameShape(QFrame.Shape.HLine)
+
 
         # Form for connections
         self.connection_form_layout = QFormLayout()
@@ -163,6 +238,7 @@ class ConnectionsTab(QWidget):
 
         # Layout adjustments
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(h_line)
         layout.addLayout(self.connection_form_layout)
         layout.addStretch(1)
         layout.addWidget(self.calib, alignment=Qt.AlignmentFlag.AlignLeft)
