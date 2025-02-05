@@ -40,6 +40,7 @@ class CalibrationMaker(QWidget):
 
         # Submit
         self.submit = QPushButton("Submit")
+        self.submit.clicked.connect(self.retrieve_inputs)
 
         # Format
         over_lay.addWidget(title)
@@ -74,13 +75,21 @@ class CalibrationMaker(QWidget):
                 x_floats.append(float(x))
             except ValueError:
                 QMessageBox.warning(self, "Value Error", "Input numbers only")
+                break
 
         for y in y_values:
             try:
                 y_floats.append(float(y))
             except ValueError:
                 QMessageBox.warning(self, "Value Error", "Input numbers only")
-        return x_floats, y_floats
+                break
+
+        self.calibrate(x_floats, y_floats)
+
+
+
+    def calibrate(self, x_values, y_values):
+        pass
 
 
 

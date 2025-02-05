@@ -278,8 +278,9 @@ class ConnectionsTab(QWidget):
         self.calib_editor.show()
 
     def open_maker(self):
-        if self.calib_maker and self.calib_maker.isVisible():
-            self.calib_maker.raise_()
+        """Ensures only one instance of CalibrationMaker is opened"""
+        if hasattr(self, 'calib_maker_window') and self.calib_maker.isVisible():
+            self.calib_maker_window.raise_()
             return
         self.calib_maker = controllers.CalibrationMaker()
         self.calib_maker.show()
