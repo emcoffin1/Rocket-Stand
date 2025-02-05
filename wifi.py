@@ -47,12 +47,10 @@ class ESP32Client(QObject):
                         self.listener_thread = threading.Thread(target=self.listen_for_responses, daemon=True)
                         self.listener_thread.start()
                 except Exception as e:
-                    print(f"[ERROR] Connection Failed: {e}")
                     misc.event_logger("WiFi Connection Failed", "SYSTEM")
             else:
-                print("[WARNING] ESP32 is already connected.")
+                pass
         else:
-            print("[WARNING] WiFi not available")
             self.connection_status.emit(False)
 
     def listen_for_responses(self):
@@ -63,7 +61,7 @@ class ESP32Client(QObject):
                 calibration_data = json.load(file)
 
         except Exception as e:
-            print(f"[ERROR] Failed to load calibration file: {e}")
+            misc.event_logger("ERROR", "SYSTEM", f"Failed to load calibration file: {e}")
             calibration_data = {}
 
 
@@ -74,31 +72,32 @@ class ESP32Client(QObject):
                     if response:
                         try:
                             raw_data = json.loads(response)
-                            print(f"[DEBUG] Raw Sensor Data: {raw_data}")
+                            misc.event_logger("DEBUG", "SYSTEM", f"Raw sensor data: {raw_data}")
 
                             calibrated_data = {}
                             for sensor, value in raw_data.items():
                                 if sensor in calibration_data:
                                     equation = calibration_data[sensor]
                                     try:
+                                        # Pass through correct calibration equation
                                         x = value
-                                        calibrated_data[sensor] = eval(equation)
+                                        calibrated_data[sensor] = eval(equation, {'x': x})
                                     except Exception as e:
-                                        print(f"[ERROR] Calibration Failed for {sensor}: {e}")
+                                        misc.event_logger("ERROR", "SYSTEM", f"Calibration failed for {sensor}: {e}")
                                         calibrated_data[sensor] = value
                                 else:
                                     calibration_data[sensor] = value
 
-                            print(f"[DEBUG] Calibratied Data: {calibration_data}")
+                            misc.event_logger("DEBUG", "SYSTEM", f"Calibrated Data: {calibrated_data}")
 
                             # Emits structured, calibrated data to update table
                             self.message_received.emit(calibration_data)
 
                         except json.JSONDecodeError:
-                            print(f'[WARNING] Recieved malformed data: {response}')
+                            misc.event_logger("WARNING", "SYSTEM", f"Recieved malformed data: {response}")
 
                 except Exception as e:
-                    print(f"[ERROR] Connection lost: {e}")
+                    misc.event_logger("ERROR", "SYSTEM", f"Connection Lost: {e}")
                     self.connection_status.emit(False)
                     self.client = None
                     break  # Stop listening if connection is lost
@@ -109,7 +108,7 @@ class ESP32Client(QObject):
             try:
                 self.client.sendall(message.encode() + b'\n')
             except Exception as e:
-                print("[Error] Sending command failed:", e)
+                misc.event_logger("ERROR", "SYSTEM", f"Sending command failed: {e}")
 
     def stop(self):
         """Close connection when exiting."""
