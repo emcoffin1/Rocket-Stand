@@ -124,7 +124,7 @@ class ConnectionsTab(QWidget):
     def __init__(self, home_page_instance):
         super().__init__()
         layout = QVBoxLayout()
-
+        self.home_page = home_page_instance
         # Title
         label = QLabel("Connections and Settings")
         label.setFont(QFont("Helvetica", 20, QFont.Weight.Medium))
@@ -162,8 +162,6 @@ class ConnectionsTab(QWidget):
 
         self.calib_editor = None
 
-
-
         # ESP32 Client Instance
         self.esp32_client = ESP32Client()
 
@@ -179,9 +177,12 @@ class ConnectionsTab(QWidget):
         self.setLayout(layout)
 
     def open_editor(self):
-        if self.calib_editor is None or not self.calib_editor.isVisible():
-            self.calib_editor = controllers.CalibrationEditor()
-            self.calib_editor.show()
+        """Ensures only one instance of CalibrationEditor is opened"""
+        if self.calib_editor and self.calib_editor.isVisible():
+            self.calib_editor.raise_()
+            return
+        self.calib_editor = controllers.CalibrationEditor(self.home_page)
+        self.calib_editor.show()
 
     def connect_esp32(self):
         """Try connecting to ESP32."""

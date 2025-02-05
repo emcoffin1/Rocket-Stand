@@ -7,24 +7,6 @@ import misc
 from subprocess import run
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QLabel, QPushButton, QTextEdit, QFileDialog, QMessageBox)
 
-class Controller():
-    def __init__(self, name):
-        self.connection = True
-        self.name = name
-
-    def connect(self):
-        esp32_ip = "192.168.4.1"
-        port = 12345
-
-        # Connect to server
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect((esp32_ip, port))
-
-        # Recieve initial message
-        data = client.recv(1024).decode()
-        print("ESP: ", data)
-
-        client.close()
 
 
 class CalibrationEditor(QWidget):
@@ -68,6 +50,8 @@ class CalibrationEditor(QWidget):
                 self.json_edit.setText(formatted_json)
                 self.json_file = file_path
 
+            except json.JSONDecodeError:
+                QMessageBox.critical(self, "Error", "Invalid JSON format. Please check your file.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to open JSON file: \n{e}")
 
