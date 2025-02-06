@@ -36,7 +36,7 @@ class CalibrationMaker(QWidget):
 
 
         # Paste Equation
-        self.equation = misc.label_maker("")
+        self.equation = misc.label_maker("", size=12)
 
         # Submit
         self.submit = QPushButton("Submit")
@@ -71,6 +71,8 @@ class CalibrationMaker(QWidget):
         x_floats = []
         y_floats = []
         for x in x_values:
+            if x_values == "":
+                pass
             try:
                 x_floats.append(float(x))
             except ValueError:
@@ -78,6 +80,8 @@ class CalibrationMaker(QWidget):
                 break
 
         for y in y_values:
+            if y_values == "":
+                pass
             try:
                 y_floats.append(float(y))
             except ValueError:
@@ -86,11 +90,12 @@ class CalibrationMaker(QWidget):
 
         self.calibrate(x_floats, y_floats)
 
-
-
     def calibrate(self, x_values, y_values):
-        pass
+        calib_class = misc.CurverFitter(x_values, y_values)
+        r2, equation = calib_class.fit_best_model()
 
+        equation = calib_class.get_equation()
+        self.equation.setText(f"{equation} -- R2:{r2:.2f}")
 
 
 class CalibrationEditor(QWidget):

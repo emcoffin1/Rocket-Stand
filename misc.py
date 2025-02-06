@@ -6,6 +6,9 @@ from PyQt6.QtGui import QFont
 import json
 import sys, csv, json
 import file_handler
+from scipy.optimize import curve_fit
+from numpy import exp, inf, sum, mean, array
+
 
 
 def event_logger(event, user, comments=''):
@@ -94,3 +97,68 @@ def check_user(user, password):
         event_logger("ERROR", "SYSTEM", "Verified Users file does not exist")
 
 
+class CurverFitter:
+    def __init__(self, x_data, y_data):
+        self.x_data = array(x_data, dtype=float)
+        self.y_data = array(y_data, dtype=float)
+        self.models = {
+            "Linear": self.linear,
+            "Quadratic": self.quadratic,
+            "Exponential": self.exponential
+        }
+        self.best_model = None
+        self.best_params = None
+        self.best_r2 = -inf
+
+
+
+    def get_equation(self):
+        """Takes 10 x and 10 y values to compute the calibration equation"""
+        if self.best_model is None:
+            return "No best fit found"
+
+        if self.best_model == "Linear":
+            a, b = self.best_params
+            return f"{a:.4f}*x + {b:.4f}"
+
+        elif self.best_model == "Quadratic":
+            a, b, c = self.best_params
+            return f"{a:.4f}x**2 + {b:.4f}*x + {c:.4f}"
+
+        elif self.best_model == "Exponential":
+            a, b = self.best_params
+            return f"{a:.4f}*exp({b:.4f}*x)"
+
+        return "No Equation"
+
+    def r_squared(self, y_true, y_pred):
+        ss_res = sum((y_true- y_pred) ** 2)
+        ss_tot = sum((y_true - mean(y_true)) **2)
+        return 1- (ss_res/ss_tot)
+
+    def fit_best_model(self):
+        for name, func in self.models.items():
+            try:
+                params, _ = curve_fit(func, self.x_data, self.y_data, maxfev=10000)
+                y_pred = func(self.x_data, *params)
+                r2 = self.r_squared(self.y_data, y_pred)
+
+                if r2 > self.best_r2:
+                    self.best_r2 = r2
+                    self.best_model = name
+                    self.best_params = params
+
+            except RuntimeError as e:
+                event_logger("ERROR", "SYSTEM", f"Calibration error: {e}")
+
+        return self.best_r2, self.best_params
+    def linear(self, x, a, b):
+        return a*x + b
+
+
+    def quadratic(self, x, a, b, c):
+        return a*x**2 + b*x + c
+
+
+    def exponential(self, x, a, b):
+        return a * exp(b*x)
