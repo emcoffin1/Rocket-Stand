@@ -1,11 +1,11 @@
 from datetime import datetime
 import pandas as pd
-from os import path
+import os
 from PyQt6.QtWidgets import QLabel, QFrame, QMessageBox
 from PyQt6.QtGui import QFont
 import json
-
-import misc
+import sys, csv, json
+import file_handler
 
 
 def event_logger(event, user, comments=''):
@@ -26,7 +26,7 @@ def event_logger(event, user, comments=''):
         "Comments": [f"    {comments}"]
     })
 
-    if path.exists(log_file):
+    if os.path.exists(log_file):
         existing_data = pd.read_csv(log_file)
         updated_data = pd.concat([existing_data, new_entry], ignore_index=True)
     else:
@@ -52,7 +52,7 @@ def data_logger(calibrated_data):
         "High Vent": [calibrated_data.get("High Vent", "")],
     })
 
-    if path.exists(log_file):
+    if os.path.exists(log_file):
         existed_data = pd.read_csv(log_file)
         updated_data = pd.concat([existed_data, new_entry], ignore_index=True)
     else:
@@ -79,18 +79,18 @@ def horizontal_line():
     return h_line
 
 def check_user(user, password):
-    user_file = "Loggers/verified_users.json"
-
+    """Checks if person logging into fire control is allowed to"""
     try:
-        with open(user_file, 'r') as file:
-            json_data = json.load(file)
-            if user in json_data:
-                if json_data[user] == password:
-                    return True
-                else:
-                    QMessageBox.warning(None,"Wrong Password", "Please try again")
+        users = file_handler.load_json("verified_user.json")
+        if user in users:
+            if users[user] == password:
+                return True
             else:
-                return False
+                QMessageBox.warning(None,"Wrong Password", "Please try again")
+        else:
+            return False
 
     except Exception as e:
-        misc.event_logger("ERROR", "SYSTEM", "Verified Users file does not exist")
+        event_logger("ERROR", "SYSTEM", "Verified Users file does not exist")
+
+

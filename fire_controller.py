@@ -18,9 +18,6 @@ class FireController(QWidget):
 
         self.setLayout(layout)
 
-    def on_tab_changed(self, index):
-        """Detect when tab changes and log out"""
-
 
 class FireLogin(QWidget):
     login_successful = pyqtSignal()
@@ -45,12 +42,13 @@ class FireLogin(QWidget):
         user = misc.label_maker("USERNAME:", size=12)
         self.user_in = QLineEdit()
         self.user_line = form.addRow(user, self.user_in)
-        self.user_in.setStyleSheet("Border: 0.25px solid black")
+        self.user_in.setStyleSheet("border: 1px solid black;")
 
         passw = misc.label_maker("PASSWORD:", size=12)
         self.pass_in = QLineEdit()
         self.pass_line = form.addRow(passw, self.pass_in)
-        self.pass_in.setStyleSheet("Border: 0.25px solid black")
+        self.pass_in.setStyleSheet("border: 1px solid black;")
+        self.pass_in.setEchoMode(QLineEdit.EchoMode.Password)
 
         # Submit button
         submit = QPushButton("Submit")

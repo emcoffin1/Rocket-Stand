@@ -41,6 +41,16 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.graphs_tab, "Values")
         self.tabs.addTab(self.connections_tab, "Settings")
 
+        # Flag a tab change
+        self.tabs.currentChanged.connect(self.on_tab_change)
+
+    def on_tab_change(self,index):
+        """Detects when tabs change"""
+        if index != self.tabs.indexOf(self.fire_tab):
+            if self.fire_tab.stacked.currentIndex() == 1:
+                self.fire_tab.stacked.setCurrentIndex(0)
+
+
 class HomePage(QWidget):
     def __init__(self):
         super().__init__()
