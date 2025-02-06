@@ -3,11 +3,10 @@ import pandas as pd
 import os
 from PyQt6.QtWidgets import QLabel, QFrame, QMessageBox
 from PyQt6.QtGui import QFont
-import json
-import sys, csv, json
 import file_handler
 from scipy.optimize import curve_fit
-from numpy import exp, inf, sum, mean, array
+import numpy as np
+
 
 
 
@@ -99,8 +98,8 @@ def check_user(user, password):
 
 class CurverFitter:
     def __init__(self, x_data, y_data):
-        self.x_data = array(x_data, dtype=float)
-        self.y_data = array(y_data, dtype=float)
+        self.x_data = np.array(x_data, dtype=float)
+        self.y_data = np.array(y_data, dtype=float)
         self.models = {
             "Linear": self.linear,
             "Quadratic": self.quadratic,
@@ -108,9 +107,21 @@ class CurverFitter:
         }
         self.best_model = None
         self.best_params = None
-        self.best_r2 = -inf
+        self.best_r2 = -np.inf
 
 
+    def is_perfectly_linear(self, tolerance=1e-6):
+        """Checks if fit is perfectly linear, will break software"""
+        dy_dx = np.diff(self.y_data) / np.diff(self.x_data)
+        if np.allclose(dy_dx, dy_dx[0]):
+            a,b = np.polyfit(self.x_data, self.y_data, 1)
+            return f"{a:.2f}*x + {b:.2f}"
+        r = np.corrcoef(self.x_data, self.y_data)[0,1]
+        if abs(r) >= 0.9999:
+            a, b = np.polyfit(self.x_data, self.y_data, 1)
+            return f"{a}*x + {b}"
+
+        return False
 
     def get_equation(self):
         """Takes 10 x and 10 y values to compute the calibration equation"""
@@ -133,7 +144,7 @@ class CurverFitter:
 
     def r_squared(self, y_true, y_pred):
         ss_res = sum((y_true- y_pred) ** 2)
-        ss_tot = sum((y_true - mean(y_true)) **2)
+        ss_tot = sum((y_true - np.mean(y_true)) **2)
         return 1- (ss_res/ss_tot)
 
     def fit_best_model(self):
@@ -161,4 +172,4 @@ class CurverFitter:
 
 
     def exponential(self, x, a, b):
-        return a * exp(b*x)
+        return a * np.exp(b*x)

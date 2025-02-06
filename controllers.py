@@ -1,8 +1,9 @@
 import json
 import misc
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QPushButton,
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton,
                              QTextEdit, QFileDialog, QMessageBox, QHBoxLayout, QLineEdit)
-
+from PyQt6.QtGui import QClipboard, QIcon
+from PyQt6.QtCore import QSize
 
 
 class CalibrationMaker(QWidget):
@@ -10,6 +11,7 @@ class CalibrationMaker(QWidget):
         super().__init__()
         self.setWindowTitle("Calibrator")
         self.resize(400,400)
+        self.equation = None
 
         # Forms vertical input layout
         over_lay = QVBoxLayout()
@@ -36,7 +38,13 @@ class CalibrationMaker(QWidget):
 
 
         # Paste Equation
-        self.equation = misc.label_maker("", size=12)
+        #self.equation = misc.label_maker("", size=12)
+        self.equation = QLineEdit()
+        self.copy = QPushButton()
+        self.copy.setIcon(QIcon("pictures/copy_logo.jpg"))
+        self.copy.setMaximumSize(50,50)
+        self.copy.setIconSize(QSize(32,32))
+        self.copy.clicked.connect(self.copy_function)
 
         # Submit
         self.submit = QPushButton("Submit")
@@ -54,7 +62,14 @@ class CalibrationMaker(QWidget):
         over_lay.addLayout(layout)
 
         over_lay.addStretch(1)
-        over_lay.addWidget(self.equation)
+
+        equation_line = QHBoxLayout()
+        equation_line.addStretch(1)
+        equation_line.addWidget(self.equation)
+        equation_line.addWidget(self.copy)
+        equation_line.addStretch(1)
+        over_lay.addLayout(equation_line)
+
         over_lay.addStretch(1)
         over_lay.addWidget(self.submit)
 
@@ -62,7 +77,9 @@ class CalibrationMaker(QWidget):
 
 
 
-
+    def copy_function(self):
+        clipboard = QApplication.clipboard()
+        clipboard.setText(self.equation.text())
 
     def retrieve_inputs(self):
         x_values = [values.text() for values in self.x_inputs]
@@ -92,10 +109,16 @@ class CalibrationMaker(QWidget):
 
     def calibrate(self, x_values, y_values):
         calib_class = misc.CurverFitter(x_values, y_values)
-        r2, equation = calib_class.fit_best_model()
+        test_values = calib_class.is_perfectly_linear()
+        if test_values:
+            self.equation.setText(f"{test_values}")
 
-        equation = calib_class.get_equation()
-        self.equation.setText(f"{equation} -- R2:{r2:.2f}")
+        else:
+            r2, equation = calib_class.fit_best_model()
+
+            equation = calib_class.get_equation()
+            self.equation = equation
+            self.equation.setText(f"{equation} -- R2:{r2:.2f}")
 
 
 class CalibrationEditor(QWidget):
