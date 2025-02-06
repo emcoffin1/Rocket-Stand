@@ -1,8 +1,11 @@
 from datetime import datetime
 import pandas as pd
 from os import path
-from PyQt6.QtWidgets import QLabel, QFrame
+from PyQt6.QtWidgets import QLabel, QFrame, QMessageBox
 from PyQt6.QtGui import QFont
+import json
+
+import misc
 
 
 def event_logger(event, user, comments=''):
@@ -76,4 +79,18 @@ def horizontal_line():
     return h_line
 
 def check_user(user, password):
-    pass
+    user_file = "Loggers/verified_users.json"
+
+    try:
+        with open(user_file, 'r') as file:
+            json_data = json.load(file)
+            if user in json_data:
+                if json_data[user] == password:
+                    return True
+                else:
+                    QMessageBox.warning(None,"Wrong Password", "Please try again")
+            else:
+                return False
+
+    except Exception as e:
+        misc.event_logger("ERROR", "SYSTEM", "Verified Users file does not exist")

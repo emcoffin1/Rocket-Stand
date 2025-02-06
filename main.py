@@ -1,5 +1,7 @@
 import engine_tests, controllers
 import sys
+
+import fire_controller
 import misc
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -86,48 +88,30 @@ class FireTab(QWidget):
     def __init__(self, home_page_instance):
         super().__init__()
         self.home_page = home_page_instance
-
-        # Frame
-        self.mainlayout = QVBoxLayout()
-        self.frame = QFrame(self)
-        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame.setStyleSheet("border: 0.25px solid black")
-
-        # Layout for Login Box
-        login_layout = QVBoxLayout()
-
-        # Form Layout
-        form = QFormLayout()
-
-        # Form objects
-        notice = misc.label_maker("Please LOGIN", size=15)
-
-        user = misc.label_maker("USERNAME:", size=12)
-        self.user_in = QLineEdit()
-        self.user_line = form.addRow(user, self.user_in)
-
-        passw = misc.label_maker("PASSWORD:", size=12)
-        self.pass_in = QLineEdit()
-        self.pass_line = form.addRow(passw,self.pass_in)
-
-        # Submit button
-        submit = QPushButton("Submit")
-        submit.clicked.connect(self.connect)
+        layout = QVBoxLayout()
 
 
-        # Layout maker
-        login_layout.addWidget(notice, alignment=Qt.AlignmentFlag.AlignCenter)
-        login_layout.addLayout(form)
-        login_layout.addWidget(submit)
-        self.frame.setLayout(login_layout)
-        self.mainlayout.addWidget(self.frame, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.setLayout(self.mainlayout)
+        # Stacked widget
+        self.stacked = QStackedWidget()
 
-    def connect(self):
-        """Send info for verification and launch fire system"""
-        user = self.user_in.text()
-        password = self.pass_in.text()
-        valid = misc.check_user(user, password)
+        self.fire_controller_page = fire_controller.FireController()
+        self.login = fire_controller.FireLogin()
+
+        self.login.login_successful.connect(self.switch)
+
+        self.stacked.addWidget(self.login)
+        self.stacked.addWidget(self.fire_controller_page)
+
+        layout.addWidget(self.stacked)
+
+        self.setLayout(layout)
+
+
+    def switch(self):
+        if self.stacked.currentIndex() == 0:
+            self.stacked.setCurrentIndex(1)
+        else:
+            self.stacked.setCurrentIndex(0)
 
 class TestTab(QWidget):
     def __init__(self, home_page_instance):
