@@ -14,30 +14,13 @@ class FireController(QWidget):
         top_bottom_splitter = QSplitter(Qt.Orientation.Vertical)
 
         # Left Section : Control Panel
-        left_widget = QWidget()
-        left_layout= QVBoxLayout(left_widget)
-        left_form = QFormLayout()
-        left_form.addRow(misc.label_maker("Test", size=12), QPushButton("test"))
-        left_layout.addLayout(left_form)
-        left_layout.addStretch(1)
-        left_widget.setLayout(left_layout)
+        left_widget = self.layout_left()
 
         # Right Section: Tables
-        right_widget = QWidget()
-        right_layout = QVBoxLayout(right_widget)
+        right_widget = self.layout_right()
 
-
-
-        # Table List
-        tableL = table_controlller.Table(["LOX Vent", "Fuel Vent", "LOX Dome Vent",
-                                                "LOX Dome Reg", "Fuel Dome Vent"])
-        tableR = table_controlller.Table(["Fuel Dome Reg", "LOX MV", "FUEL MV",
-                                                "High Pressure", "High Vent"])
-
-        # Format right column tables
-        right_layout.addWidget(tableL)
-        right_layout.addWidget(tableR)
-        right_widget.setLayout(right_layout)
+        # Bottom section: Fire Control
+        bottom_widget = self.layout_bottom()
 
         # Add left and right to main splitter
         main_splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -47,12 +30,7 @@ class FireController(QWidget):
         # Force Equal Width
         main_splitter.setSizes([300,300])
 
-        # Bottom section: Fire Control
-        bottom_widget = QWidget()
-        bottom_layout = QHBoxLayout(bottom_widget)
-        fire_button = QPushButton("FIRE")
-        bottom_layout.addWidget(fire_button)
-        bottom_widget.setLayout(bottom_layout)
+
 
         # Add top and bottom to splitter
         top_bottom_splitter.addWidget(main_splitter)
@@ -62,7 +40,7 @@ class FireController(QWidget):
         main_layout = QVBoxLayout(self)
         main_layout.addWidget(misc.label_maker("Fire Control"), alignment=Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(misc.horizontal_line())
-        main_splitter.addWidget(top_bottom_splitter)
+        main_layout.addWidget(top_bottom_splitter)
         self.setLayout(main_layout)
 
 
@@ -71,16 +49,53 @@ class FireController(QWidget):
 
     def layout_left(self):
         """Used for values"""
-        #frame = QFrame()
-        #frame.setFrameShape(Qt.)
-        pass
+        # Init widget and layout
+        left_widget = QWidget()
+        left_layout = QVBoxLayout(left_widget)
+        left_form = QFormLayout()
+
+        # Add rows of controls
+        left_form.addRow(misc.label_maker("Test", size=12), QPushButton("test"))
+
+        # Format layout
+        left_layout.addLayout(left_form)
+        left_layout.addStretch(1)
+        left_widget.setLayout(left_layout)
+        return left_widget
+
+
     def layout_right(self):
         """Used for controls"""
-        pass
+        # Init widget and layout
+        right_widget = QWidget()
+        right_layout = QVBoxLayout(right_widget)
+
+        # Table List
+        tableL = table_controlller.Table(["LOX Vent", "Fuel Vent", "LOX Dome Vent",
+                                          "LOX Dome Reg", "Fuel Dome Vent"])
+        tableR = table_controlller.Table(["Fuel Dome Reg", "LOX MV", "FUEL MV",
+                                          "High Pressure", "High Vent"])
+
+        # Format right column tables
+        right_layout.addWidget(tableL)
+        right_layout.addWidget(tableR)
+        right_widget.setLayout(right_layout)
+        return right_widget
+
     def layout_bottom(self):
         """Used to initiate fire sequence and maybe more
            (include a timer for the countdown)"""
-        pass
+        # Init layout and widget
+        bottom_widget = QWidget()
+        bottom_layout = QHBoxLayout(bottom_widget)
+
+        # Add items
+        fire_button = QPushButton("FIRE")
+
+        # Format layout
+        bottom_layout.addWidget(fire_button)
+        bottom_widget.setLayout(bottom_layout)
+        return bottom_widget
 
 class FireLogin(QWidget):
     login_successful = pyqtSignal()

@@ -96,3 +96,15 @@ Timestamp,User,Event,Comments
 2025-02-06 23:03:54,    SYSTEM    ,    Program Started,    
 2025-02-06 23:06:24,    SYSTEM    ,    Program Started,    
 2025-02-06 23:08:48,    SYSTEM    ,    Program Started,    
+2025-02-06 23:13:09,    SYSTEM    ,    Program Started,    
+2025-02-06 23:13:21,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-06 23:13:21,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-06 23:13:24,    SYSTEM    ,    Program End,    
+2025-02-06 23:13:48,    SYSTEM    ,    Program Started,    
+2025-02-06 23:13:58,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-06 23:13:58,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-06 23:14:04,    SYSTEM    ,    Program End,    
+2025-02-06 23:15:43,    SYSTEM    ,    Program Started,    
+2025-02-06 23:15:52,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-06 23:15:52,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-06 23:15:54,    SYSTEM    ,    Program End,    

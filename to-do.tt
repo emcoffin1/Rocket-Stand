@@ -1,12 +1,14 @@
 fire tab
-    actually make the controller
-
-
+    add various controls, camera control, valve control
+    add countdown and lower control (not sure what else yet)
+    format fire button maybe add confirm
+    figure out how to update and pass through calibrated data
 
 calibration maker
-    input data and it makes the calibration equation
-    just need to make the actual math now
-
+    trouble shoot as some didn't work
 
 convert file openers into video game like version
     when converted to exe, still able to write to json and csv
+    revisit and make sure it works
+    ensure all files function appropriately
+
