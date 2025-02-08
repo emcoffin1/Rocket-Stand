@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
-                             QSplitter, QFrame, QHeaderView)
+                             QSplitter, QFrame, QHeaderView, QFormLayout, QLabel,
+                             QPushButton)
 from PyQt6.QtCore import Qt
 
 
@@ -7,7 +8,7 @@ class Table(QTableWidget):
     def __init__(self, labels):
         super().__init__()
         self.setHorizontalHeaderLabels(labels)
-        self.setRowCount(5)
+        self.setRowCount(len(labels))
         self.setColumnCount(1)
         self.setMaximumWidth(200)
         self.labels = {}
@@ -21,6 +22,7 @@ class Table(QTableWidget):
         # Top Header Remover
         self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.horizontalHeader().setVisible(False)
+
 
     def update_table(self, calibrated_data):
         # Check if data is passed
@@ -42,4 +44,30 @@ class Table(QTableWidget):
                     row = self.labels[sensor]
                     # index, column, value
                     self.setItem(row, 1, QTableWidgetItem(formatted_value))
+
+
+class Controller_Spread(QFormLayout):
+    def __init__(self, labels: list):
+        super().__init__()
+
+        self.lab_val = {}
+        # Sensor, Checkbox State
+        for sensor in labels:
+            box = QPushButton()
+            box.setStyleSheet("color: Red")
+            box.setMinimumSize(30, 30)
+            label = QLabel(sensor)
+            label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+            self.lab_val[sensor] = box
+            self.addRow(label, box)
+
+
+    def update_states(self, states: dict):
+        """Updates valve state: red: open(0), yellow: disconnected(1), green: closed(2)"""
+        colorMap = {0: "red", 1: "yellow", 2: "green"}
+        for sensor, state in states:
+            # Check if sensor exists
+            if sensor in states.items():
+                self.lab_val[sensor] = state
+                self.lab_val[sensor].setStyleSheet(f"background-color: {colorMap[state]}")
 

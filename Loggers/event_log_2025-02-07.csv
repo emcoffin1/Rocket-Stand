@@ -7,3 +7,64 @@ Timestamp,User,Event,Comments
 2025-02-07 13:31:59,    SYSTEM    ,    ERROR,    Verified Users file does not exist
 2025-02-07 13:31:59,    ETHAN     ,    LOGIN,    Fire Control Login
 2025-02-07 13:33:53,    SYSTEM    ,    Program End,    
+2025-02-07 18:30:14,    SYSTEM    ,    Program Started,    
+2025-02-07 18:30:26,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 18:30:26,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 18:30:36,    SYSTEM    ,    Program End,    
+2025-02-07 18:32:14,    SYSTEM    ,    Program Started,    
+2025-02-07 18:32:23,    SYSTEM    ,    Program End,    
+2025-02-07 18:55:30,    SYSTEM    ,    Program Started,    
+2025-02-07 18:57:07,    SYSTEM    ,    Program Started,    
+2025-02-07 19:04:53,    SYSTEM    ,    Program Started,    
+2025-02-07 19:05:03,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:05:03,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:05:10,    SYSTEM    ,    Program End,    
+2025-02-07 19:05:40,    SYSTEM    ,    Program Started,    
+2025-02-07 19:06:10,    SYSTEM    ,    Program Started,    
+2025-02-07 19:06:18,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:06:19,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:06:34,    SYSTEM    ,    Program End,    
+2025-02-07 19:07:19,    SYSTEM    ,    Program Started,    
+2025-02-07 19:07:28,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:07:28,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:07:34,    SYSTEM    ,    Program End,    
+2025-02-07 19:09:24,    SYSTEM    ,    Program Started,    
+2025-02-07 19:09:34,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:09:34,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:09:52,    SYSTEM    ,    Program End,    
+2025-02-07 19:10:30,    SYSTEM    ,    Program Started,    
+2025-02-07 19:11:09,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:11:09,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:12:48,    SYSTEM    ,    Program End,    
+2025-02-07 19:24:12,    SYSTEM    ,    Program Started,    
+2025-02-07 19:24:26,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:24:26,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:24:29,    SYSTEM    ,    Program End,    
+2025-02-07 19:26:20,    SYSTEM    ,    Program Started,    
+2025-02-07 19:26:29,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:26:29,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:27:00,    SYSTEM    ,    Program End,    
+2025-02-07 19:31:12,    SYSTEM    ,    Program Started,    
+2025-02-07 19:31:22,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:31:22,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:31:28,    SYSTEM    ,    Program End,    
+2025-02-07 19:31:51,    SYSTEM    ,    Program Started,    
+2025-02-07 19:32:00,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:32:00,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:32:13,    SYSTEM    ,    Program End,    
+2025-02-07 19:32:49,    SYSTEM    ,    Program Started,    
+2025-02-07 19:32:57,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:32:57,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:33:01,    SYSTEM    ,    Program End,    
+2025-02-07 19:35:42,    SYSTEM    ,    Program Started,    
+2025-02-07 19:35:52,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:35:52,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:36:03,    SYSTEM    ,    Program End,    
+2025-02-07 19:38:53,    SYSTEM    ,    Program Started,    
+2025-02-07 19:39:02,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:39:02,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:39:23,    SYSTEM    ,    Program End,    
+2025-02-07 19:41:25,    SYSTEM    ,    Program Started,    
+2025-02-07 19:41:34,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 19:41:34,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 19:41:39,    SYSTEM    ,    Program End,    

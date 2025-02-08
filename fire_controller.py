@@ -51,14 +51,18 @@ class FireController(QWidget):
         """Used for values"""
         # Init widget and layout
         left_widget = QWidget()
-        left_layout = QVBoxLayout(left_widget)
+        left_layout = QHBoxLayout(left_widget)
         left_form = QFormLayout()
 
-        # Add rows of controls
-        left_form.addRow(misc.label_maker("Test", size=12), QPushButton("test"))
+        # Add controller panel
+        controller_table = table_controlller.Controller_Spread(["High Press", "High Vent", "LOX Dome Reg",
+                                                                "LOX Dome Vent", "Fuel Dome Reg", "Fuel Dome Vent",
+                                                                "LOX Vent", "Fuel Vent", "LOX Main Valve",
+                                                                "Fuel Main Valve"])
 
         # Format layout
         left_layout.addLayout(left_form)
+        left_layout.addLayout(controller_table)
         left_layout.addStretch(1)
         left_widget.setLayout(left_layout)
         return left_widget
@@ -71,10 +75,10 @@ class FireController(QWidget):
         right_layout = QVBoxLayout(right_widget)
 
         # Table List
-        tableL = table_controlller.Table(["LOX Vent", "Fuel Vent", "LOX Dome Vent",
-                                          "LOX Dome Reg", "Fuel Dome Vent"])
-        tableR = table_controlller.Table(["Fuel Dome Reg", "LOX MV", "FUEL MV",
-                                          "High Pressure", "High Vent"])
+        tableL = table_controlller.Table(["High Press 1", "High Press 2", "LOX Tank 1",
+                                          "LOX Tank 2", "Fuel Tank 1", "Fuel Tank 2"])
+        tableR = table_controlller.Table(["LOX Dome Reg", "Fuel Dome Reg", "LOX Inlet",
+                                          "Fuel Inlet", "Chamber 1", "Chamber 2"])
 
         # Format right column tables
         right_layout.addWidget(tableL)

@@ -1,9 +1,13 @@
-x = ["e", "t", "h"]
-z = {}
-for id, y in enumerate(x):
-    z[y] = id
+x = {"e":0, "t":1, "h":2}
+z = ["e", "t", "h"]
+m = {}
+for i in z:
+    m[i] = 1
 
-print(z)
+for key, calue in m.items():
+    print(key, calue)
+
+
 
 
 

@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
         # Main window settings
         self.setWindowTitle("Fuel and Rocket Test Stand")
         self.setGeometry(100, 100, 600, 500)
-        self.setMinimumSize(600, 500)
+        self.setMinimumSize(600, 600)
 
         # Tab initialize
         self.tabs = QTabWidget()
