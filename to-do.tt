@@ -1,5 +1,6 @@
 fire tab
     add various controls, camera control, valve control
+        fix control side, not reading correct values
     add countdown and lower control (not sure what else yet)
     format fire button maybe add confirm
     figure out how to update and pass through calibrated data

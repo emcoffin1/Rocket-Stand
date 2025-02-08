@@ -3,6 +3,7 @@ import threading
 import json
 from PyQt6.QtCore import QObject, pyqtSignal
 
+import controllers
 import misc
 
 ESP_IP = "192.168.4.1"  # ESP32 AP IP
@@ -10,7 +11,7 @@ PORT = 80
 
 class ESP32Client(QObject):
     """Handles ESP32 connection, listening, and sending commands."""
-    message_received = pyqtSignal(str)  # Signal to update GUI when a new message is received
+    message_received = pyqtSignal(dict)  # Signal to update GUI when a new message is received
     connection_status = pyqtSignal(bool)  # Signal to update connection status in GUI
 
 
@@ -19,6 +20,7 @@ class ESP32Client(QObject):
         self.client = None
         self.running = True
         self.listener_thread = None
+        self.calibrator = controllers.CalibrationProcessor("Loggers/calibration.json")
 
 
     def is_esp32_connected(self):
@@ -69,10 +71,12 @@ class ESP32Client(QObject):
             if self.client:
                 try:
                     response = self.client.recv(1024).decode()
+                    print(response)
                     if response:
                         try:
                             raw_data = json.loads(response)
-                            misc.event_logger("DEBUG", "SYSTEM", f"Raw sensor data: {raw_data}")
+                            #print(f"Received input: {raw_data}")
+                            #misc.event_logger("DEBUG", "SYSTEM", f"Raw sensor data: {raw_data}")
 
                             calibrated_data = {}
                             for sensor, value in raw_data.items():
@@ -80,21 +84,21 @@ class ESP32Client(QObject):
                                     equation = calibration_data[sensor]
                                     try:
                                         # Pass through correct calibration equation
-                                        x = value
-                                        calibrated_data[sensor] = eval(equation, {'x': x})
+                                        calib_value, _ = self.calibrator.compute(sensor, value)
+                                        calibrated_data[sensor] = eval(equation, {'x': round(calib_value,2)})
                                     except Exception as e:
                                         misc.event_logger("ERROR", "SYSTEM", f"Calibration failed for {sensor}: {e}")
                                         calibrated_data[sensor] = value
                                 else:
                                     calibration_data[sensor] = value
 
-                            misc.event_logger("DEBUG", "SYSTEM", f"Calibrated Data: {calibrated_data}")
-
+                            #misc.event_logger("DEBUG", "SYSTEM", f"Calibrated Data: {calibrated_data}")
                             # Emits structured, calibrated data to update table
-                            self.message_received.emit(calibration_data)
+                            self.message_received.emit(calibrated_data)
 
-                        except json.JSONDecodeError:
-                            misc.event_logger("WARNING", "SYSTEM", f"Recieved malformed data: {response}")
+                        except json.JSONDecodeError as e:
+                            misc.event_logger("WARNING", "SYSTEM", f"Recieved malformed data: {e}")
+
 
                 except Exception as e:
                     misc.event_logger("ERROR", "SYSTEM", f"Connection Lost: {e}")

@@ -83,7 +83,7 @@ def horizontal_line():
 def check_user(user, password):
     """Checks if person logging into fire control is allowed to"""
     try:
-        users = file_handler.load_json("verified_user.json")
+        users = file_handler.load_json("Loggers/verified_user.json")
         if user in users:
             if users[user] == password:
                 return True
@@ -93,7 +93,7 @@ def check_user(user, password):
             return False
 
     except Exception as e:
-        event_logger("ERROR", "SYSTEM", "Verified Users file does not exist")
+        event_logger("ERROR", "SYSTEM", f"check_user: {e}")
 
 
 class CurverFitter:

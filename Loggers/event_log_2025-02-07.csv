@@ -1,70 +1,178 @@
 Timestamp,User,Event,Comments
-2025-02-07 12:41:06,    SYSTEM    ,    Program Started,    
-2025-02-07 12:42:03,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 12:42:03,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 12:42:11,    SYSTEM    ,    Program End,    
-2025-02-07 13:31:46,    SYSTEM    ,    Program Started,    
-2025-02-07 13:31:59,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 13:31:59,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 13:33:53,    SYSTEM    ,    Program End,    
-2025-02-07 18:30:14,    SYSTEM    ,    Program Started,    
-2025-02-07 18:30:26,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 18:30:26,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 18:30:36,    SYSTEM    ,    Program End,    
-2025-02-07 18:32:14,    SYSTEM    ,    Program Started,    
-2025-02-07 18:32:23,    SYSTEM    ,    Program End,    
-2025-02-07 18:55:30,    SYSTEM    ,    Program Started,    
-2025-02-07 18:57:07,    SYSTEM    ,    Program Started,    
-2025-02-07 19:04:53,    SYSTEM    ,    Program Started,    
-2025-02-07 19:05:03,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:05:03,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:05:10,    SYSTEM    ,    Program End,    
-2025-02-07 19:05:40,    SYSTEM    ,    Program Started,    
-2025-02-07 19:06:10,    SYSTEM    ,    Program Started,    
-2025-02-07 19:06:18,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:06:19,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:06:34,    SYSTEM    ,    Program End,    
-2025-02-07 19:07:19,    SYSTEM    ,    Program Started,    
-2025-02-07 19:07:28,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:07:28,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:07:34,    SYSTEM    ,    Program End,    
-2025-02-07 19:09:24,    SYSTEM    ,    Program Started,    
-2025-02-07 19:09:34,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:09:34,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:09:52,    SYSTEM    ,    Program End,    
-2025-02-07 19:10:30,    SYSTEM    ,    Program Started,    
-2025-02-07 19:11:09,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:11:09,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:12:48,    SYSTEM    ,    Program End,    
-2025-02-07 19:24:12,    SYSTEM    ,    Program Started,    
-2025-02-07 19:24:26,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:24:26,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:24:29,    SYSTEM    ,    Program End,    
-2025-02-07 19:26:20,    SYSTEM    ,    Program Started,    
-2025-02-07 19:26:29,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:26:29,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:27:00,    SYSTEM    ,    Program End,    
-2025-02-07 19:31:12,    SYSTEM    ,    Program Started,    
-2025-02-07 19:31:22,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:31:22,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:31:28,    SYSTEM    ,    Program End,    
-2025-02-07 19:31:51,    SYSTEM    ,    Program Started,    
-2025-02-07 19:32:00,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:32:00,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:32:13,    SYSTEM    ,    Program End,    
-2025-02-07 19:32:49,    SYSTEM    ,    Program Started,    
-2025-02-07 19:32:57,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:32:57,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:33:01,    SYSTEM    ,    Program End,    
-2025-02-07 19:35:42,    SYSTEM    ,    Program Started,    
-2025-02-07 19:35:52,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:35:52,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:36:03,    SYSTEM    ,    Program End,    
-2025-02-07 19:38:53,    SYSTEM    ,    Program Started,    
-2025-02-07 19:39:02,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:39:02,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:39:23,    SYSTEM    ,    Program End,    
-2025-02-07 19:41:25,    SYSTEM    ,    Program Started,    
-2025-02-07 19:41:34,    SYSTEM    ,    ERROR,    Verified Users file does not exist
-2025-02-07 19:41:34,    ETHAN     ,    LOGIN,    Fire Control Login
-2025-02-07 19:41:39,    SYSTEM    ,    Program End,    
+2025-02-07 21:15:09,    SYSTEM    ,    Program Started,    
+2025-02-07 21:15:09,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:15:15,    SYSTEM    ,    Program End,    
+2025-02-07 21:18:44,    SYSTEM    ,    Program Started,    
+2025-02-07 21:18:44,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:18:49,    SYSTEM    ,    Program End,    
+2025-02-07 21:18:54,    SYSTEM    ,    Program Started,    
+2025-02-07 21:18:54,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:19:02,    SYSTEM    ,    Program End,    
+2025-02-07 21:21:33,    SYSTEM    ,    Program Started,    
+2025-02-07 21:21:33,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 125, 'LOX Inlet': 132}"
+2025-02-07 21:21:33,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:21:34,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 149, 'LOX Inlet': 103}"
+2025-02-07 21:21:34,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:21:35,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 107, 'LOX Inlet': 118}"
+2025-02-07 21:21:35,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:21:36,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 105, 'LOX Inlet': 124}"
+2025-02-07 21:21:36,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:21:37,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 131, 'LOX Inlet': 135}"
+2025-02-07 21:21:37,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:21:38,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 126, 'LOX Inlet': 131}"
+2025-02-07 21:21:38,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:08,    SYSTEM    ,    Program Started,    
+2025-02-07 21:25:08,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 138, 'LOX Inlet': 125}"
+2025-02-07 21:25:08,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:09,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 112, 'LOX Inlet': 138}"
+2025-02-07 21:25:09,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:10,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 119, 'LOX Inlet': 149}"
+2025-02-07 21:25:10,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:11,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 101, 'LOX Inlet': 136}"
+2025-02-07 21:25:11,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:12,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 116, 'LOX Inlet': 109}"
+2025-02-07 21:25:12,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:13,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 106, 'LOX Inlet': 139}"
+2025-02-07 21:25:13,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:14,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 147, 'LOX Inlet': 113}"
+2025-02-07 21:25:14,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:15,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 139, 'LOX Inlet': 138}"
+2025-02-07 21:25:15,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:16,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 132, 'LOX Inlet': 109}"
+2025-02-07 21:25:16,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:17,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 103, 'LOX Inlet': 130}"
+2025-02-07 21:25:17,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:18,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 120, 'LOX Inlet': 141}"
+2025-02-07 21:25:18,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:19,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 144, 'LOX Inlet': 112}"
+2025-02-07 21:25:19,    SYSTEM    ,    WARNING,"    Recieved malformed data: 
+"
+2025-02-07 21:25:20,    SYSTEM    ,    DEBUG,"    Calibrated Data: {'High Press': 1, 'High Vent': 1, 'Fuel Inlet': 145, 'LOX Inlet': 103}"
+2025-02-07 21:25:20,    SYSTEM    ,    Program End,    
+2025-02-07 21:27:25,    SYSTEM    ,    Program Started,    
+2025-02-07 21:27:25,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:27:32,    SYSTEM    ,    Program End,    
+2025-02-07 21:28:15,    SYSTEM    ,    Program Started,    
+2025-02-07 21:28:15,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:28:16,    SYSTEM    ,    WARNING,    Recieved malformed data: Expecting value: line 2 column 1 (char 2)
+2025-02-07 21:28:17,    SYSTEM    ,    WARNING,    Recieved malformed data: Expecting value: line 2 column 1 (char 2)
+2025-02-07 21:28:18,    SYSTEM    ,    WARNING,    Recieved malformed data: Expecting value: line 2 column 1 (char 2)
+2025-02-07 21:28:18,    SYSTEM    ,    Program End,    
+2025-02-07 21:32:24,    SYSTEM    ,    Program Started,    
+2025-02-07 21:32:24,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:32:31,    SYSTEM    ,    Program End,    
+2025-02-07 21:33:01,    SYSTEM    ,    Program Started,    
+2025-02-07 21:33:01,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:34:33,    SYSTEM    ,    Program Started,    
+2025-02-07 21:34:43,    SYSTEM    ,    Program End,    
+2025-02-07 21:34:56,    SYSTEM    ,    Program Started,    
+2025-02-07 21:34:56,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:34:56,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:34:57,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:34:58,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:34:59,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:00,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:01,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:02,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:03,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:04,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:05,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:06,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:07,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:08,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:09,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:35:10,    SYSTEM    ,    Program End,    
+2025-02-07 21:36:13,    SYSTEM    ,    Program Started,    
+2025-02-07 21:36:13,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:36:14,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:36:15,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:36:16,    SYSTEM    ,    Program End,    
+2025-02-07 21:36:50,    SYSTEM    ,    Program Started,    
+2025-02-07 21:36:50,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:36:50,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:36:51,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:36:52,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:36:53,    SYSTEM    ,    Program End,    
+2025-02-07 21:37:26,    SYSTEM    ,    Program Started,    
+2025-02-07 21:37:27,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:37:28,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:37:29,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:37:29,    SYSTEM    ,    Program End,    
+2025-02-07 21:40:08,    SYSTEM    ,    Program Started,    
+2025-02-07 21:40:08,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:40:08,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:40:09,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:40:10,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:40:11,    SYSTEM/fir,    DEBUG,    Error:too many values to unpack (expected 2)
+2025-02-07 21:40:12,    SYSTEM    ,    Program End,    
+2025-02-07 21:41:48,    SYSTEM    ,    Program Started,    
+2025-02-07 21:41:49,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:41:49,    SYSTEM    ,    DEBUG,    Table Controller: too many values to unpack (expected 2)
+2025-02-07 21:41:50,    SYSTEM    ,    DEBUG,    Table Controller: too many values to unpack (expected 2)
+2025-02-07 21:41:51,    SYSTEM    ,    DEBUG,    Table Controller: too many values to unpack (expected 2)
+2025-02-07 21:41:51,    SYSTEM    ,    Program End,    
+2025-02-07 21:44:06,    SYSTEM    ,    Program Started,    
+2025-02-07 21:44:07,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:44:08,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:09,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:10,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:11,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:12,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:13,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:14,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:15,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:16,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:16,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 21:44:16,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 21:44:17,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:18,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:19,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:20,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:21,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:22,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:23,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:24,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:25,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:26,    SYSTEM    ,    DEBUG,    Table Controller: 'int' object has no attribute 'setStyleSheet'
+2025-02-07 21:44:26,    SYSTEM    ,    Program End,    
+2025-02-07 21:47:44,    SYSTEM    ,    Program Started,    
+2025-02-07 21:47:59,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 21:47:59,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 21:48:03,    SYSTEM    ,    Program End,    
+2025-02-07 21:48:38,    SYSTEM    ,    Program Started,    
+2025-02-07 21:48:38,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:48:48,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 21:48:48,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 21:49:02,    SYSTEM    ,    Program End,    
+2025-02-07 21:50:43,    SYSTEM    ,    Program Started,    
+2025-02-07 21:50:43,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:56:40,    SYSTEM    ,    Program Started,    
+2025-02-07 21:56:56,    SYSTEM    ,    Program Started,    
+2025-02-07 21:57:21,    SYSTEM    ,    Program Started,    
+2025-02-07 21:57:21,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:57:37,    SYSTEM    ,    Program End,    
+2025-02-07 21:58:29,    SYSTEM    ,    Program Started,    
+2025-02-07 21:58:30,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:58:37,    SYSTEM    ,    ERROR,    check_user: 'str' object cannot be interpreted as an integer
+2025-02-07 21:58:37,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 21:58:46,    SYSTEM    ,    Program End,    
+2025-02-07 21:59:31,    SYSTEM    ,    Program Started,    
+2025-02-07 21:59:31,    SYSTEM    ,    WiFi Connected,    
+2025-02-07 21:59:33,    SYSTEM    ,    Program End,    

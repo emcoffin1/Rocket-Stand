@@ -1,15 +1,17 @@
-import engine_tests, controllers
+import engine_tests, controllers, table_controlller
 import sys
 
 import fire_controller
 import misc
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QThread
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTabWidget, QWidget, QLabel, QPushButton,
     QVBoxLayout, QHBoxLayout, QLineEdit, QFormLayout, QComboBox, QStackedWidget,
     QTableWidget, QTableWidgetItem, QHeaderView, QFrame
 )
 from PyQt6.QtGui import QFont, QPixmap
+
+import wifi
 from wifi import ESP32Client
 
 
@@ -27,12 +29,15 @@ class MainWindow(QMainWindow):
         self.tabs = QTabWidget()
         self.setCentralWidget(self.tabs)
 
+        # Init esp32 server
+        self.esp_client = wifi.ESP32Client()
+
         # Create Tabs
         self.home_page = HomePage()
-        self.fire_tab = FireTab(self.home_page)
+        self.fire_tab = FireTab(self.home_page, self.esp_client)
         self.test_tab = TestTab(self.home_page)
-        self.graphs_tab = ValuesTab(self.home_page)
-        self.connections_tab = ConnectionsTab(self.home_page)
+        self.graphs_tab = ValuesTab(self.home_page, self.esp_client)
+        self.connections_tab = ConnectionsTab(self.home_page, self.esp_client)
 
         # Add Tabs
         self.tabs.addTab(self.home_page, "Home")
@@ -95,16 +100,17 @@ class HomePage(QWidget):
         self.setLayout(layout)
 
 class FireTab(QWidget):
-    def __init__(self, home_page_instance):
+    def __init__(self, home_page_instance, esp_client):
         super().__init__()
         self.home_page = home_page_instance
         layout = QVBoxLayout()
+        self.esp_client = esp_client
 
 
         # Stacked widget
         self.stacked = QStackedWidget()
 
-        self.fire_controller_page = fire_controller.FireController()
+        self.fire_controller_page = fire_controller.FireController(esp_client=self.esp_client)
         self.login = fire_controller.FireLogin()
 
         self.login.login_successful.connect(self.switch)
@@ -150,9 +156,10 @@ class TestTab(QWidget):
         self.stacked_widget.setCurrentIndex(index)
 
 class ValuesTab(QWidget):
-    def __init__(self, home_page_instance):
+    def __init__(self, home_page_instance, esp_client):
         super().__init__()
         self.home_page = home_page_instance
+        self.esp_client = esp_client
         layout = QVBoxLayout()
         label = misc.label_maker("Values")
         layout.addWidget(label, alignment=Qt.AlignmentFlag.AlignHCenter)
@@ -163,21 +170,11 @@ class ValuesTab(QWidget):
         # Table Layout
         tlayout = QHBoxLayout()
 
-        # Left Side Table
-        self.leftTable = QTableWidget(5,1)
-        self.leftTable.setVerticalHeaderLabels(["LOX Vent", "Fuel Vent", "LOX Dome Vent",
-                                                "LOX Dome Reg", "Fuel Dome Vent"])
-        self.leftTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.leftTable.horizontalHeader().setVisible(False)
-        self.leftTable.verticalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignRight)
-
-        # Right Side Table
-        self.rightTable = QTableWidget(5, 1)
-        self.rightTable.setVerticalHeaderLabels(["Fuel Dome Reg", "LOX MV", "FUEL MV",
-                                                "High Pressure", "High Vent"])
-        self.rightTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.rightTable.horizontalHeader().setVisible(False)
-        self.rightTable.verticalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignRight)
+        # Table List
+        self.tableL = table_controlller.Table(["High Press 1", "High Press 2", "LOX Tank 1",
+                                               "LOX Tank 2", "Fuel Tank 1", "Fuel Tank 2"])
+        self.tableR = table_controlller.Table(["LOX Dome Reg", "Fuel Dome Reg", "LOX Inlet",
+                                               "Fuel Inlet", "Chamber 1", "Chamber 2"])
 
         # Record Data Button
         self.record = QPushButton("Record Data")
@@ -193,51 +190,25 @@ class ValuesTab(QWidget):
 
         # Layout
         tlayout.addStretch(1)
-        tlayout.addWidget(self.leftTable)
-        tlayout.addWidget(self.rightTable)
+        tlayout.addWidget(self.tableL)
+        tlayout.addWidget(self.tableR)
         tlayout.addStretch(1)
         layout.addLayout(tlayout)
         layout.addStretch(1)
         layout.addWidget(self.record)
         self.setLayout(layout)
 
-    def display_data(self, calibrated_data):
+        self.esp_client.message_received.connect(self.update_tables)
+
+
+
+    def update_tables(self, calibrated_data):
         """Updates table cell with calibrated data"""
-
-        # Map sensor names to table rows
-        left_tablemap = {
-            "LOX Vent": 0,
-            "Fuel Vent": 1,
-            "LOX Dome Vent": 2,
-            "LOX Dome Reg": 3,
-            "Fuel Dome Vent": 4
-        }
-        right_tablemap = {
-            "Fuel Dome Reg": 0,
-            "LOX MV": 1,
-            "FUEL MV": 2,
-            "High Pressure": 3,
-            "High Vent": 4
-        }
-
-        for sensor, value in calibrated_data.items():
-            formatted_value = f"{value:.2f}"
-
-            # Update left table
-            if sensor in left_tablemap:
-                # Get index of sensor
-                row = left_tablemap[sensor]
-                # index, column, value
-                self.leftTable.setItem(row, 1, QTableWidgetItem(formatted_value))
-
-            # Update right table
-            elif sensor in right_tablemap:
-                row = right_tablemap[sensor]
-                self.rightTable.setItem(row, 1, QTableWidgetItem(formatted_value))
-
-            # If Record Data Clicked
-            if self.is_recording:
-                misc.data_logger(calibrated_data)
+        try:
+            self.tableR.update_table(calibrated_data)
+            self.tableL.update_table(calibrated_data)
+        except Exception as e:
+            misc.event_logger("DEBUG", "SYSTEM", f"ValTab-update_tables: {e}")
 
 
     def record_data(self):
@@ -261,7 +232,7 @@ class ValuesTab(QWidget):
             self.is_recording = False
 
 class ConnectionsTab(QWidget):
-    def __init__(self, home_page_instance):
+    def __init__(self, home_page_instance, espclient):
         super().__init__()
         layout = QVBoxLayout()
         self.home_page = home_page_instance
@@ -296,7 +267,7 @@ class ConnectionsTab(QWidget):
         self.calib_editor = None
 
         # ESP32 Client Instance
-        self.esp32_client = ESP32Client()
+        self.esp32_client = espclient
 
         # Connect Signals to Update GUI
         self.esp32_client.connection_status.connect(self.update_connection_status)
@@ -339,6 +310,11 @@ class ConnectionsTab(QWidget):
             self.status1.setText("Connected")
             self.status1.setStyleSheet("Color: Green")
             self.connect1.setEnabled(False)
+
+            self.listener_thread = QThread()
+            self.esp32_client.moveToThread(self.listener_thread)
+            self.listener_thread.started.connect(self.esp32_client.listen_for_responses)
+            self.listener_thread.start()
 
         else:
             self.status1.setText("Disconnected")

@@ -204,7 +204,7 @@ class CalibrationProcessor:
 
         equation = self.equations.get(name)
         if not equation:
-            misc.event_logger("ERROR", "SYSTEM", f"Calibration equation not found for: {name}")
+            misc.event_logger("ERROR", "SYSTEM/controller", f"Calibration equation not found for: {name}")
 
         # Formats json properly
         equation = equation.replace("^", "**")
@@ -214,7 +214,7 @@ class CalibrationProcessor:
             return y, None
 
         except Exception as e:
-            misc.event_logger("ERROR", "SYSTEM", f"Error applying calibration: {e}")
+            misc.event_logger("ERROR", "SYSTEM/controller", f"Error applying calibration: {e}")
 
 
 
