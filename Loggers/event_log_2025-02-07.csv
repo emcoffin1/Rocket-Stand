@@ -1,0 +1,9 @@
+Timestamp,User,Event,Comments
+2025-02-07 12:41:06,    SYSTEM    ,    Program Started,    
+2025-02-07 12:42:03,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 12:42:03,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 12:42:11,    SYSTEM    ,    Program End,    
+2025-02-07 13:31:46,    SYSTEM    ,    Program Started,    
+2025-02-07 13:31:59,    SYSTEM    ,    ERROR,    Verified Users file does not exist
+2025-02-07 13:31:59,    ETHAN     ,    LOGIN,    Fire Control Login
+2025-02-07 13:33:53,    SYSTEM    ,    Program End,    

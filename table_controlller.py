@@ -10,14 +10,9 @@ class Table(QTableWidget):
         self.setRowCount(5)
         self.setColumnCount(1)
         self.setMaximumWidth(200)
-        self.labels = {
-            labels[0]: 0,
-            labels[1]: 1,
-            labels[2]: 2,
-            labels[3]: 3,
-            labels[4]: 4
-        }
-
+        self.labels = {}
+        for index, items in enumerate(labels):
+            self.labels[items] = index
 
         # Set labels
         self.setVerticalHeaderLabels(labels)

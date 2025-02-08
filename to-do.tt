@@ -16,3 +16,29 @@ fault detection (maybe a third unit)
     overload protection
     voltage input
 
+
+sensors:
+High Press 1
+High Press 2
+LOX Tank 1
+LOX Tank 2
+Fuel Tank 1
+Fuel Tank 2
+LOX Dome Reg
+Fuel Dome Reg
+LOX Inlet
+Fuel Inlet
+Chamber 1
+Chamber 2
+
+solenoid valves:
+High Press
+High Vent
+LOX Dome Reg
+LOX Dome Vent
+Fuel Dome Reg
+Fuel Dome Vent
+LOX Vent
+Fuel Vent
+LOX Main Valve
+Fuel Main Valve
