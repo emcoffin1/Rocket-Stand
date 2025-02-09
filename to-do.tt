@@ -2,6 +2,7 @@ fire tab
     add various controls, camera control, valve control
         fix control side, not reading correct values
     add countdown and lower control (not sure what else yet)
+        add T+ capabilities
     format fire button maybe add confirm
     figure out how to update and pass through calibrated data
 
@@ -25,8 +26,8 @@ LOX Tank 1
 LOX Tank 2
 Fuel Tank 1
 Fuel Tank 2
-LOX Dome Reg
-Fuel Dome Reg
+LOX Dome Reg S
+Fuel Dome Reg S
 LOX Inlet
 Fuel Inlet
 Chamber 1

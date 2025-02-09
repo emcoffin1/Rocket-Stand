@@ -27,6 +27,7 @@ class Table(QTableWidget):
 
 
     def update_table(self, calibrated_data):
+        """Updates table as new value arrive"""
         try:
             # Check if data is passed, use this if not
             if not calibrated_data:
@@ -43,10 +44,11 @@ class Table(QTableWidget):
 
                     # Filter if sensor is in table listed
                     if sensor in self.labels.keys():
+
                         # Get index of sensor
                         row = self.labels[sensor]
                         # index, column, value
-                        self.setItem(row, 1, QTableWidgetItem(formatted_value))
+                        self.setItem(row, 0, QTableWidgetItem(formatted_value))
         except Exception as e:
             misc.event_logger("DEBUG", "SYSTEM", f"Table Editor: {e}")
 
@@ -61,6 +63,7 @@ class Controller_Spread(QFormLayout):
             box = QPushButton()
             box.setStyleSheet("color: Red")
             box.setMinimumSize(30, 30)
+            box.setStyleSheet(f"background-color: yellow")
             label = QLabel(sensor)
             label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
             self.lab_val[sensor] = box

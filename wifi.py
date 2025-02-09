@@ -2,12 +2,10 @@ import socket
 import threading
 import json
 from PyQt6.QtCore import QObject, pyqtSignal
-
 import controllers
+import file_handler
 import misc
 
-ESP_IP = "192.168.4.1"  # ESP32 AP IP
-PORT = 80
 
 class ESP32Client(QObject):
     """Handles ESP32 connection, listening, and sending commands."""
@@ -15,13 +13,14 @@ class ESP32Client(QObject):
     connection_status = pyqtSignal(bool)  # Signal to update connection status in GUI
 
 
-    def __init__(self):
+    def __init__(self, ip, port):
         super().__init__()
         self.client = None
         self.running = True
         self.listener_thread = None
-        self.calibrator = controllers.CalibrationProcessor("Loggers/calibration.json")
-
+        self.calibrator = controllers.CalibrationProcessor()
+        self.ip = ip
+        self.port = port
 
     def is_esp32_connected(self):
         """Check if ESP32 is reachable before attempting connection."""
@@ -29,7 +28,7 @@ class ESP32Client(QObject):
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(2)
-            sock.connect((ESP_IP, PORT))
+            sock.connect((self.ip, self.port))
             sock.close()
             return True
         except (socket.timeout, socket.error):
@@ -41,7 +40,7 @@ class ESP32Client(QObject):
             if self.client is None:
                 try:
                     self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.client.connect((ESP_IP, PORT))
+                    self.client.connect((self.ip, self.port))
                     self.connection_status.emit(True)
                     misc.event_logger("WiFi Connected", "SYSTEM")
 
@@ -57,40 +56,35 @@ class ESP32Client(QObject):
 
     def listen_for_responses(self):
         """Continuously listen for messages from ESP32 and update GUI."""
-        calibration_file = "Loggers/calibration.json"
-        try:
-            with open(calibration_file, 'r') as file:
-                calibration_data = json.load(file)
-
-        except Exception as e:
-            misc.event_logger("ERROR", "SYSTEM", f"Failed to load calibration file: {e}")
-            calibration_data = {}
+        formulas = file_handler.load_json("Loggers/calibration.json").keys()
 
 
         while self.running:
             if self.client:
                 try:
                     response = self.client.recv(1024).decode()
-                    print(response)
                     if response:
+
                         try:
-                            raw_data = json.loads(response)
-                            #print(f"Received input: {raw_data}")
+                            raw_data = dict(json.loads(response))
                             #misc.event_logger("DEBUG", "SYSTEM", f"Raw sensor data: {raw_data}")
 
+                            # Store the new calibrated data being created for emitting
                             calibrated_data = {}
+
                             for sensor, value in raw_data.items():
-                                if sensor in calibration_data:
-                                    equation = calibration_data[sensor]
+                                if sensor in formulas:
+
                                     try:
                                         # Pass through correct calibration equation
-                                        calib_value, _ = self.calibrator.compute(sensor, value)
-                                        calibrated_data[sensor] = eval(equation, {'x': round(calib_value,2)})
+                                        calib_val = self.calibrator.compute(name=sensor, xvalue=value)
+                                        # Add it to list
+                                        calibrated_data[sensor] = calib_val
                                     except Exception as e:
-                                        misc.event_logger("ERROR", "SYSTEM", f"Calibration failed for {sensor}: {e}")
+                                        misc.event_logger("ERROR", "SYSTEM", f"listen - Calibration failed for {sensor}:{e}")
                                         calibrated_data[sensor] = value
                                 else:
-                                    calibration_data[sensor] = value
+                                    calibrated_data[sensor] = value
 
                             #misc.event_logger("DEBUG", "SYSTEM", f"Calibrated Data: {calibrated_data}")
                             # Emits structured, calibrated data to update table
@@ -118,5 +112,15 @@ class ESP32Client(QObject):
         """Close connection when exiting."""
         self.running = False
         if self.client:
-            self.client.close()
+            try:
+                self.client.shutdown(socket.SHUT_RDWR)
+                self.client.close()
+            except Exception as e:
+                misc.event_logger("WARNING", "SYSTEM", f'WiFi Stop: {e}')
+
             self.client = None
+            self.connection_status.emit(False)
+
+        if self.listener_thread and self.listener_thread.is_alive():
+            self.listener_thread.join(timeout=2)
+            self.listener_thread = None

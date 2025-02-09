@@ -1,8 +1,10 @@
 from datetime import datetime
 import pandas as pd
 import os
-from PyQt6.QtWidgets import QLabel, QFrame, QMessageBox
+import time
+from PyQt6.QtWidgets import QLabel, QFrame, QMessageBox, QVBoxLayout, QWidget
 from PyQt6.QtGui import QFont
+from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 import file_handler
 from scipy.optimize import curve_fit
 import numpy as np
@@ -18,7 +20,7 @@ def event_logger(event, user, comments=''):
         user = user[0:10]
 
     # Access file
-    log_file = f"Loggers/event_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
+    log_file = f"data/Loggers/event_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
 
     # Format new entry
     new_entry = pd.DataFrame({
@@ -38,7 +40,7 @@ def event_logger(event, user, comments=''):
 
 def data_logger(calibrated_data):
     """Logs calibrated data when record data turned on"""
-    log_file = f"Loggers/data_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
+    log_file = f"data/Loggers/data_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
 
     new_entry = pd.DataFrame({
         "": [datetime.now().strftime('%Y-%m-%d %H:%M:%S')],
@@ -83,9 +85,12 @@ def horizontal_line():
 def check_user(user, password):
     """Checks if person logging into fire control is allowed to"""
     try:
-        users = file_handler.load_json("Loggers/verified_user.json")
+
+        users = file_handler.load_json("data/Loggers/verified_users.json")
+
         if user in users:
-            if users[user] == password:
+
+            if users[user] == str(password):
                 return True
             else:
                 QMessageBox.warning(None,"Wrong Password", "Please try again")
@@ -173,3 +178,74 @@ class CurverFitter:
 
     def exponential(self, x, a, b):
         return a * np.exp(b*x)
+
+
+class countTimer(QWidget):
+    # Emits to signal end of timer only for fire sequence
+    end_countdown_fire = pyqtSignal(bool)
+
+    def __init__(self, direction="down", duration=5):
+        super().__init__()
+
+        # Setup time class
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_timer)
+        self.counting_up = False
+
+        # Setup timer parameters
+        self.duration = duration
+        self.time_left = 0 if direction == "up" else duration
+        self.direction = direction.lower()
+
+        # Layout of label
+        self.layout = QVBoxLayout(self)
+
+        # UI Element
+        self.label = label_maker(f"T-{5}", size=15)
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
+
+    def format_timer(self, seconds):
+        """Converts to a nicer format (MM:SS)"""
+        minutes = seconds//60
+        seconds = seconds % 60
+        return f"{minutes:02}:{seconds:02}"
+
+    def start_timer(self, direction=None, duration=None):
+        """Starts countdown, can overwrite initial values"""
+        try:
+            if duration is not None:
+                self.duration = duration
+            if direction is not None:
+                self.counting_up = (direction.lower() == "up")
+
+            self.time_left = self.duration if not self.counting_up else 0
+            self.label.setText(f"T-{str(self.format_timer(self.time_left))}")
+            self.timer.start(1000)
+
+        except Exception as e:
+            event_logger("ERROR", "SYSTEM", f"start_timer: {e}")
+
+    def update_timer(self):
+        """Handles countdown and switch to T+"""
+        try:
+            if not self.counting_up:
+                self.time_left -= 1
+                self.label.setText(f"T-{str(self.format_timer(self.time_left))}")
+
+                if self.time_left <= 0:
+                    self.counting_up = True
+                    self.end_countdown_fire.emit(True)
+
+            else:
+                self.time_left += 1
+                self.label.setText(f"T+{str(self.format_timer(self.time_left))}")
+        except Exception as e:
+            event_logger("ERROR", "SYSTEM", f"update_timer: {e}")
+    def stop_timer(self):
+        """Stops timer manually"""
+        try:
+            self.timer.stop()
+            self.label.setText(f"T-{self.duration}")
+        except Exception as e:
+            event_logger("ERROR", "SYSTEM", f"stop_timer: {e}")

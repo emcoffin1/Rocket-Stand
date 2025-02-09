@@ -1,6 +1,6 @@
 import engine_tests, controllers, table_controlller
 import sys
-
+from file_handler import load_json
 import fire_controller
 import misc
 from PyQt6.QtCore import Qt, QThread
@@ -10,9 +10,7 @@ from PyQt6.QtWidgets import (
     QTableWidget, QTableWidgetItem, QHeaderView, QFrame
 )
 from PyQt6.QtGui import QFont, QPixmap
-
 import wifi
-from wifi import ESP32Client
 
 
 # Initialize Window
@@ -30,12 +28,13 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tabs)
 
         # Init esp32 server
-        self.esp_client = wifi.ESP32Client()
+        config = load_json("config.json")
+        self.esp_client = wifi.ESP32Client(ip=config["ESP32_IP"], port=config["PORT"])
 
         # Create Tabs
         self.home_page = HomePage()
         self.fire_tab = FireTab(self.home_page, self.esp_client)
-        self.test_tab = TestTab(self.home_page)
+        self.test_tab = TestTab(self.home_page, self.esp_client)
         self.graphs_tab = ValuesTab(self.home_page, self.esp_client)
         self.connections_tab = ConnectionsTab(self.home_page, self.esp_client)
 
@@ -130,10 +129,10 @@ class FireTab(QWidget):
             self.stacked.setCurrentIndex(0)
 
 class TestTab(QWidget):
-    def __init__(self, home_page_instance):
+    def __init__(self, home_page_instance, esp32_client):
         super().__init__()
         layout = QVBoxLayout()
-
+        self.esp32_client = esp32_client
         self.home_page = home_page_instance
 
         # Dropdown Menu to switch between tests
@@ -146,8 +145,8 @@ class TestTab(QWidget):
 
         # All widgets should be in a stacked_widget
         self.stacked_widget = QStackedWidget()
-        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page))
-        self.stacked_widget.addWidget(engine_tests.LeakTestLayout(self.home_page))
+        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page, esp32_client))
+        self.stacked_widget.addWidget(engine_tests.LeakTestLayout(self.home_page, esp32_client))
         layout.addWidget(self.stacked_widget)
 
         self.setLayout(layout)
@@ -248,11 +247,14 @@ class ConnectionsTab(QWidget):
         input1 = QLabel("Controller Connection:")
         self.status1 = QLabel("Disconnected")
         self.status1.setStyleSheet("Color: Red")
+        self.discon1 = QPushButton("Disconnect")
         self.connect1 = QPushButton("Connect")
         self.connect1.clicked.connect(self.connect_esp32)
+        self.discon1.clicked.connect(self.close_esp)
         self.formline1.addWidget(input1)
         self.formline1.addWidget(self.status1)
         self.formline1.addStretch(1)
+        self.formline1.addWidget(self.discon1)
         self.formline1.addWidget(self.connect1)
 
 
@@ -302,6 +304,9 @@ class ConnectionsTab(QWidget):
     def connect_esp32(self):
         """Try connecting to ESP32."""
         self.esp32_client.connect_to_esp32()
+    def close_esp(self):
+        """Close ESP32 connection"""
+        self.esp32_client.stop()
 
 
     def update_connection_status(self, is_connected):
@@ -310,16 +315,26 @@ class ConnectionsTab(QWidget):
             self.status1.setText("Connected")
             self.status1.setStyleSheet("Color: Green")
             self.connect1.setEnabled(False)
+            self.discon1.setEnabled(True)
 
-            self.listener_thread = QThread()
-            self.esp32_client.moveToThread(self.listener_thread)
-            self.listener_thread.started.connect(self.esp32_client.listen_for_responses)
-            self.listener_thread.start()
+            if not hasattr(self, "listener_thread") or self.listener_thread is None or self.listener_thread.isRunning():
+                self.listener_thread = QThread()
+                self.esp32_client.moveToThread(self.listener_thread)
+                self.listener_thread.started.connect(self.esp32_client.listen_for_responses)
+                self.listener_thread.start()
 
         else:
             self.status1.setText("Disconnected")
             self.status1.setStyleSheet("Color: Red")
             self.connect1.setEnabled(True)
+            self.discon1.setEnabled(False)
+
+            if hasattr(self, "listener_thread") and self.listener_thread:
+
+                self.listener_thread.quit()
+                self.listener_thread.wait()
+                self.listener_thread = None
+
 
 
     def send_command(self, command):

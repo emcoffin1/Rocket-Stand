@@ -8,11 +8,12 @@ from PyQt6.QtGui import QFont, QColor, QBrush
 import misc
 from controllers import CalibrationProcessor
 from wifi import ESP32Client
+from file_handler import load_json
 
 
 
 class ClickTestLayout(QWidget):
-    def __init__(self, home_page_instance):
+    def __init__(self, home_page_instance, esp32_client):
         super().__init__()
         self.home_page = home_page_instance
         layout = QVBoxLayout()
@@ -33,11 +34,11 @@ class ClickTestLayout(QWidget):
 
 
 class LeakTestLayout(QWidget):
-    def __init__(self, home_page_instance):
+    def __init__(self, home_page_instance, esp32_client):
         super().__init__()
         self.home_page = home_page_instance
         layout = QVBoxLayout()
-
+        self.esp32_client = esp32_client
         # Test Title
         label = misc.label_maker("Leak Test")
 
@@ -85,7 +86,6 @@ class LeakTestLayout(QWidget):
         self.sensor_values = {"FTPT": [], "LTPT": [], "Pneum": [], "HPPT": []}
         self.current_row = 0
 
-        self.esp32_client = ESP32Client()
 
 
     def confirm_start(self):

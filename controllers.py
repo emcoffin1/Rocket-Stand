@@ -1,4 +1,6 @@
 import json
+
+import file_handler
 import misc
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton,
                              QTextEdit, QFileDialog, QMessageBox, QHBoxLayout, QLineEdit)
@@ -189,32 +191,26 @@ class CalibrationEditor(QWidget):
 
 class CalibrationProcessor:
 
-    def __init__(self, json_file="Loggers/calibration.json"):
-        self.json_file = json_file
-        self.equations = self.load_equations()
+    def __init__(self):
+        self.json_file = file_handler.load_json("loggers/calibration.json")
 
-    def load_equations(self):
-        try:
-            with open(self.json_file, "r") as file:
-                return json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            return {}
 
     def compute(self, name, xvalue):
-
-        equation = self.equations.get(name)
+        # Get correct equation based on sensor name
+        equation = self.json_file[name]
         if not equation:
-            misc.event_logger("ERROR", "SYSTEM/controller", f"Calibration equation not found for: {name}")
+            misc.event_logger("ERROR", "SYSTEM", f"Compute-Calibration equation not found for: {name}")
 
         # Formats json properly
         equation = equation.replace("^", "**")
 
         try:
-            y = eval(equation, {"x": xvalue})
-            return y, None
+            # Evaluate equation
+            y = eval(equation, {"x": int(xvalue)})
+            return y
 
         except Exception as e:
-            misc.event_logger("ERROR", "SYSTEM/controller", f"Error applying calibration: {e}")
+            misc.event_logger("ERROR", "SYSTEM", f" Compute-Error applying calibration: {e}")
 
 
 

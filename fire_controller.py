@@ -1,12 +1,12 @@
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                              QMessageBox, QLineEdit, QFrame, QFormLayout, QSplitter)
-
-import misc
-import table_controlller
+from PyQt6.QtGui import QFont
+import misc, table_controlller
 
 
 class FireController(QWidget):
+    launch_countdown = pyqtSignal(bool)
     def __init__(self, esp_client):
         super().__init__()
         # ESP Client
@@ -86,7 +86,7 @@ class FireController(QWidget):
         # Table List
         self.tableL = table_controlller.Table(["High Press 1", "High Press 2", "LOX Tank 1",
                                           "LOX Tank 2", "Fuel Tank 1", "Fuel Tank 2"])
-        self.tableR = table_controlller.Table(["LOX Dome Reg", "Fuel Dome Reg", "LOX Inlet",
+        self.tableR = table_controlller.Table(["LOX Dome Reg S", "Fuel Dome Reg S", "LOX Inlet",
                                           "Fuel Inlet", "Chamber 1", "Chamber 2"])
 
         # Format right column tables
@@ -103,12 +103,33 @@ class FireController(QWidget):
         bottom_layout = QHBoxLayout(bottom_widget)
 
         # Add items
-        fire_button = QPushButton("FIRE")
+        self.fire_button = QPushButton("FIRE")
+        self.fire_button.setStyleSheet("background-color: red")
+        self.fire_button.setFont(QFont("Arial", 20, QFont.Weight.DemiBold))
+        self.fire_button.setMinimumSize(50,50)
+        self.test = misc.countTimer("down", 5)
+        self.fire_button.clicked.connect(self.count_down)
 
         # Format layout
-        bottom_layout.addWidget(fire_button)
+        bottom_layout.addWidget(self.fire_button)
+        bottom_layout.addWidget(self.test)
         bottom_widget.setLayout(bottom_layout)
         return bottom_widget
+
+    def count_down(self):
+        """Initiates launch countdown"""
+        self.test.start_timer()
+        self.fire_button.setText("ABORT")
+        self.fire_button.setStyleSheet("background-color: orange")
+        self.fire_button.clicked.connect(self.stop_countdown)
+
+    def stop_countdown(self):
+        """Stops countdown"""
+        self.test.stop_timer()
+        self.fire_button.setText("FIRE")
+        self.fire_button.setStyleSheet("background-color: red")
+        self.fire_button.clicked.connect(self.count_down)
+
 
 class FireLogin(QWidget):
     login_successful = pyqtSignal()
@@ -175,3 +196,6 @@ class FireLogin(QWidget):
             self.user_in.setText("")
             self.pass_in.setText("")
             # misc.event_logger("SECURITY", "SYSTEM", f"{user} failed to login")
+
+
+
