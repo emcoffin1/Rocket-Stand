@@ -16,12 +16,12 @@ from file_handler import load_json
 
 
 class ClickTestLayout(QWidget):
-    def __init__(self, home_page_instance, esp32_client, colormap, config):
+    def __init__(self, home_page_instance, esp32_client, config, colorMap):
         super().__init__()
         # Init passed through items
         self.home_page = home_page_instance
         self.esp32_client = esp32_client
-        self.colorMap = colormap
+        self.colorMap = colorMap
         self.config = config
 
 
@@ -45,8 +45,10 @@ class ClickTestLayout(QWidget):
         self.start_button = self.start_test_section()
 
         # Test logic
+        self.altMap = {"red": 0, "yellow": 1, "green": 2}
+
         self.test = test_logic.ClickTest_logic(esp_client=self.esp32_client, config=self.config,
-                                               tables=[self.table_L, self.table_R])
+                                               tables=self.table_R, label=self.cur_sens, colorMap=self.altMap)
 
         # Form Layout
         value_state_splitter.addWidget(self.left_t)
@@ -81,8 +83,7 @@ class ClickTestLayout(QWidget):
         # Init table and text
         label = misc.label_maker("Position", size=15, weight=QFont.Weight.DemiBold)
 
-
-        self.table_L = table_controlller.Controller_Spread(labels=self.config["VALVES"], colorMap=self.colorMap)
+        self.table_L = table_controlller.Controller_Spread(labels=self.config["VALVES"], colorMap=self.altMap)
 
         # Make layout
         layout.addWidget(label)

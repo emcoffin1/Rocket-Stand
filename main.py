@@ -151,7 +151,7 @@ class TestTab(QWidget):
 
         # All widgets should be in a stacked_widget
         self.stacked_widget = QStackedWidget()
-        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page, esp32_client, config=self.config, colormap=colormap))
+        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page, esp32_client, config=self.config, colorMap=colormap))
         self.stacked_widget.addWidget(engine_tests.LeakTestLayout(self.home_page, esp32_client, config=self.config))
         layout.addWidget(self.stacked_widget)
 
