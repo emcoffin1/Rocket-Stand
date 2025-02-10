@@ -1,2 +1,3 @@
-x = {"ethan": 0, "Test": 10}
-print(x.items())
+x = {'yes': 1, "no": 0, "test": 3}
+if "test" in x.keys():
+    print(x["test"])

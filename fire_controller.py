@@ -7,11 +7,14 @@ import misc, table_controlller
 
 class FireController(QWidget):
     launch_countdown = pyqtSignal(bool)
-    def __init__(self, esp_client):
-        super().__init__()
-        # ESP Client
-        self.esp_client = esp_client
 
+    def __init__(self, esp_client, sensors, valves, colormap):
+        super().__init__()
+        # ESP Client and Sensor list from config
+        self.esp_client = esp_client
+        self.Sensors = sensors
+        self.Valves = valves
+        self.ColorMap = colormap
         # Main Layout
         top_bottom_splitter = QSplitter(Qt.Orientation.Vertical)
 
@@ -50,7 +53,6 @@ class FireController(QWidget):
     def update_tables(self, calibrated_data):
         """Updates data as it comes in"""
         try:
-            self.tableL.update_table(calibrated_data)
             self.tableR.update_table(calibrated_data)
             self.controller_table.update_states(calibrated_data)
         except Exception as e:
@@ -61,16 +63,11 @@ class FireController(QWidget):
         # Init widget and layout
         left_widget = QWidget()
         left_layout = QHBoxLayout(left_widget)
-        left_form = QFormLayout()
 
         # Add controller panel
-        self.controller_table = table_controlller.Controller_Spread(["High Press", "High Vent", "LOX Dome Reg",
-                                                                "LOX Dome Vent", "Fuel Dome Reg", "Fuel Dome Vent",
-                                                                "LOX Vent", "Fuel Vent", "LOX Main Valve",
-                                                                "Fuel Main Valve"])
+        self.controller_table = table_controlller.Controller_Spread(self.Valves, colorMap=self.ColorMap)
 
         # Format layout
-        left_layout.addLayout(left_form)
         left_layout.addLayout(self.controller_table)
         left_layout.addStretch(1)
         left_widget.setLayout(left_layout)
@@ -84,13 +81,9 @@ class FireController(QWidget):
         right_layout = QVBoxLayout(right_widget)
 
         # Table List
-        self.tableL = table_controlller.Table(["High Press 1", "High Press 2", "LOX Tank 1",
-                                          "LOX Tank 2", "Fuel Tank 1", "Fuel Tank 2"])
-        self.tableR = table_controlller.Table(["LOX Dome Reg S", "Fuel Dome Reg S", "LOX Inlet",
-                                          "Fuel Inlet", "Chamber 1", "Chamber 2"])
+        self.tableR = table_controlller.Table(self.Sensors)
 
         # Format right column tables
-        right_layout.addWidget(self.tableL)
         right_layout.addWidget(self.tableR)
         right_widget.setLayout(right_layout)
         return right_widget

@@ -33,8 +33,10 @@ class MainWindow(QMainWindow):
 
         # Create Tabs
         self.home_page = HomePage()
-        self.fire_tab = FireTab(self.home_page, self.esp_client)
-        self.test_tab = TestTab(self.home_page, self.esp_client)
+        self.fire_tab = FireTab(self.home_page, self.esp_client,sensors=config["SENSORS"], valves=config["VALVES"],
+                                colormap=config["Valve_ColorMap"])
+        self.test_tab = TestTab(self.home_page, self.esp_client,
+                                sensors=config["SENSORS"], valves=config["VALVES"], colormap=config["Valve_ColorMap"])
         self.graphs_tab = ValuesTab(self.home_page, self.esp_client)
         self.connections_tab = ConnectionsTab(self.home_page, self.esp_client)
 
@@ -99,17 +101,18 @@ class HomePage(QWidget):
         self.setLayout(layout)
 
 class FireTab(QWidget):
-    def __init__(self, home_page_instance, esp_client):
+    def __init__(self, home_page_instance, esp_client, sensors, valves, colormap):
         super().__init__()
         self.home_page = home_page_instance
         layout = QVBoxLayout()
-        self.esp_client = esp_client
+        esp_client = esp_client
 
 
         # Stacked widget
         self.stacked = QStackedWidget()
 
-        self.fire_controller_page = fire_controller.FireController(esp_client=self.esp_client)
+        self.fire_controller_page = fire_controller.FireController(esp_client=esp_client,
+                                                                   sensors=sensors, valves=valves, colormap=colormap)
         self.login = fire_controller.FireLogin()
 
         self.login.login_successful.connect(self.switch)
@@ -129,7 +132,7 @@ class FireTab(QWidget):
             self.stacked.setCurrentIndex(0)
 
 class TestTab(QWidget):
-    def __init__(self, home_page_instance, esp32_client):
+    def __init__(self, home_page_instance, esp32_client, sensors, valves, colormap):
         super().__init__()
         layout = QVBoxLayout()
         self.esp32_client = esp32_client
@@ -145,8 +148,8 @@ class TestTab(QWidget):
 
         # All widgets should be in a stacked_widget
         self.stacked_widget = QStackedWidget()
-        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page, esp32_client))
-        self.stacked_widget.addWidget(engine_tests.LeakTestLayout(self.home_page, esp32_client))
+        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page, esp32_client, valves, colormap))
+        self.stacked_widget.addWidget(engine_tests.LeakTestLayout(self.home_page, esp32_client, sensors))
         layout.addWidget(self.stacked_widget)
 
         self.setLayout(layout)

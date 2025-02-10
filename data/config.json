@@ -1,4 +1,27 @@
 {
   "ESP32_IP": "192.168.4.1",
-  "PORT": 80
+  "PORT": 80,
+  "SENSORS": ["High Press 1",
+              "High Press 2",
+              "LOX Tank 1",
+              "LOX Tank 2",
+              "Fuel Tank 1",
+              "Fuel Tank 2",
+              "LOX Dome Reg S",
+              "Fuel Dome Reg S",
+              "LOX Inlet",
+              "Fuel Inlet",
+              "Chamber 1",
+              "Chamber 2"],
+  "VALVES": ["High Press",
+              "High Vent",
+              "LOX Dome Reg",
+              "LOX Dome Vent",
+              "Fuel Dome Reg",
+              "Fuel Dome Vent",
+              "LOX Vent",
+              "Fuel Vent",
+              "LOX Main Valve",
+              "Fuel Main Valve"],
+  "Valve_ColorMap": {"red": 0, "gray": 1, "green": 2}
 }

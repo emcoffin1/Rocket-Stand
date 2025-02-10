@@ -44,3 +44,17 @@ LOX Vent
 Fuel Vent
 LOX Main Valve
 Fuel Main Valve
+
+
+Engine Tests:
+    Click
+    Leak
+    Cold FLow
+    Pressure Drop
+    Solenoid/Actuator REPONSE
+    sensor calibration
+    DAQ system test
+    Injector flow test? (probably not needed)
+    ignition sequence
+    purge system
+    emergency shutoff and dumb

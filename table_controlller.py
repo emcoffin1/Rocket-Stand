@@ -54,8 +54,9 @@ class Table(QTableWidget):
 
 
 class Controller_Spread(QFormLayout):
-    def __init__(self, labels: list):
+    def __init__(self, labels: list, colorMap):
         super().__init__()
+        self.colorMap = colorMap
 
         self.lab_val = {}
         # Sensor, Checkbox State
@@ -63,6 +64,7 @@ class Controller_Spread(QFormLayout):
             box = QPushButton()
             box.setStyleSheet("color: Red")
             box.setMinimumSize(30, 30)
+            box.setMaximumSize(30,30)
             box.setStyleSheet(f"background-color: yellow")
             label = QLabel(sensor)
             label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
@@ -70,16 +72,31 @@ class Controller_Spread(QFormLayout):
             self.addRow(label, box)
 
 
-    def update_states(self, states: dict):
+    def update_states(self, states: dict, colorMap=None):
         """Updates valve state: red: open(0), yellow: disconnected(1), green: closed(2)"""
+        # Check if colorMap is being overwritten
+        if colorMap is None:
 
-        try:
-            colorMap = {0: "red", 1: "yellow", 2: "green"}
-            for sensor, state in states.items():
-                # Check if sensor exists
-                if sensor in self.lab_val:
-                    button = self.lab_val[sensor]
-                    button.setStyleSheet(f"background-color: {colorMap.get(state, 'gray')}")
+            try:
+                for sensor, state in states.items():
+                    # Check if sensor exists
+                    if sensor in self.lab_val:
+                        button = self.lab_val[sensor]
+                        colorState = next((k for k, v in self.colorMap.items() if v == state), None)
+                        button.setStyleSheet(f"background-color: {colorState}")
 
-        except Exception as e:
-            misc.event_logger("DEBUG", "SYSTEM", f"Table Controller: {e}")
+            except Exception as e:
+                misc.event_logger("DEBUG", "SYSTEM", f"Table Controller: {e}")
+        # Overwritten for click test
+        # Send new data and map
+        if colorMap is not None:
+            try:
+                for sensor, state in states.items():
+                    # Check if sensor exists
+                    if sensor in self.lab_val:
+                        button = self.lab_val[sensor]
+                        colorState = next((k for k, v in colorMap.items() if v == state), None)
+                        button.setStyleSheet(f"background-color: {colorState}")
+
+            except Exception as e:
+                misc.event_logger("DEBUG", "SYSTEM", f"Table Controller: {e}")

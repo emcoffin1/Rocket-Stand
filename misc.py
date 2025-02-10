@@ -13,6 +13,7 @@ import numpy as np
 
 
 def event_logger(event, user, comments=''):
+    """Logs key / critical events for reference or debugging"""
     # Format username to a specific size
     if len(user) < 10:
         user = f"{user}" + " " * (10 - len(user))
@@ -38,24 +39,20 @@ def event_logger(event, user, comments=''):
     updated_data.to_csv(log_file, index=False)
 
 
-def data_logger(calibrated_data):
-    """Logs calibrated data when record data turned on"""
-    log_file = f"data/Loggers/data_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
+def data_logger(calibrated_data:dict):
+    """Logs calibrated data when record data turned on or during fire"""
 
-    new_entry = pd.DataFrame({
-        "": [datetime.now().strftime('%Y-%m-%d %H:%M:%S')],
-        "LOX Vent": [calibrated_data.get("LOX Vent", "")],
-        "Fuel Vent": [calibrated_data.get("Fuel Vent", "")],
-        "LOX Dome Vent": [calibrated_data.get("LOX Dome Vent", "")],
-        "LOX Dome Reg": [calibrated_data.get("LOX Dome Reg", "")],
-        "Fuel Dome Vent": [calibrated_data.get("Fuel Dome Vent", "")],
-        "Fuel Dome Reg": [calibrated_data.get("Fuel Dome Reg", "")],
-        "LOX MV": [calibrated_data.get("LOX MV", "")],
-        "Fuel MV": [calibrated_data.get("Fuel MV", "")],
-        "High Pressure": [calibrated_data.get("High Pressure", "")],
-        "High Vent": [calibrated_data.get("High Vent", "")],
-    })
+    # Access file
+    log_file = file_handler.load_csv(f"Loggers/Data_log_{datetime.now().strftime('%Y-%m-%d')}")
+    new_entry = {}
 
+    # Log Time then values
+    new_entry["Time"] = [datetime.now().strftime('%H:%M:%S')]
+    for sensor, value in calibrated_data.items():
+        new_entry[sensor] = value
+    new_entry = pd.DataFrame(new_entry)
+
+    # If the path exists
     if os.path.exists(log_file):
         existed_data = pd.read_csv(log_file)
         updated_data = pd.concat([existed_data, new_entry], ignore_index=True)
@@ -201,7 +198,7 @@ class countTimer(QWidget):
         self.layout = QVBoxLayout(self)
 
         # UI Element
-        self.label = label_maker(f"T-{5}", size=15)
+        self.label = label_maker(f"T-{5}", size=20, weight=QFont.Weight.Bold)
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
 

@@ -1,11 +1,13 @@
 import random
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QPushButton, QMessageBox,
-    QTableWidget, QHeaderView, QTableWidgetItem
+    QTableWidget, QHeaderView, QTableWidgetItem, QHBoxLayout, QSplitter
 )
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QFont, QColor, QBrush
 import misc
+import table_controlller
+import test_logic
 from controllers import CalibrationProcessor
 from wifi import ESP32Client
 from file_handler import load_json
@@ -13,28 +15,130 @@ from file_handler import load_json
 
 
 class ClickTestLayout(QWidget):
-    def __init__(self, home_page_instance, esp32_client):
+    def __init__(self, home_page_instance, esp32_client, colormap, config):
         super().__init__()
+        # Init passed through items
         self.home_page = home_page_instance
-        layout = QVBoxLayout()
-        layout.addWidget(QLabel("Click Test"))
+        self.esp32_client = esp32_client
+        self.colorMap = colormap
+        self.config = config
 
-        # Value Label
-        self.lab = QLabel("0")
-        layout.addWidget(self.lab)
+
+        # Init primary layout
+        layout = QVBoxLayout()
+        top_layout = QVBoxLayout()
+
+        # Splitters
+        value_state_splitter = QSplitter(Qt.Orientation.Horizontal)
+        value_state_splitter.setSizes([300,300])
+
+        # Label
+        self.label = self.title_section()
+
+        # Left side
+        self.left_t = self.table_values()
+
+        # Right side
+        self.right_t = self.test_values()
 
         # Start Button
-        self.start_b = QPushButton("Start Test")
-        self.start_b.resize(50,75)
-        layout.addWidget(self.start_b)
-        self.start_b.setStyleSheet('background-color: #BF1F0C; color: White')
+        self.start_button = self.start_test_section()
 
+        # Form Layout
+        value_state_splitter.addWidget(self.left_t)
+        value_state_splitter.addWidget(self.right_t)
+
+
+        # Layout
+        layout.addWidget(self.label, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(misc.horizontal_line())
+        layout.addWidget(value_state_splitter)
+        layout.addWidget(self.start_button)
 
         self.setLayout(layout)
 
+    def title_section(self):
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+
+        # Label
+        label_title = misc.label_maker("Click Test")
+
+        layout.addWidget(label_title)
+        layout.addWidget(misc.horizontal_line())
+        widget.setLayout(layout)
+
+        return widget
+    def table_values(self):
+        # Init widget and layout
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+
+
+        # Init table and text
+        label = misc.label_maker("Position", size=15, weight=QFont.Weight.DemiBold)
+        #self.table_L = table_controlller.Controller_Spread(labels=self.config["VALVES"], colorMap=self.colorMap)
+
+        # Make layout
+        layout.addWidget(label)
+        #layout.addLayout(self.table_L)
+        widget.setLayout(layout)
+        return widget
+
+    def test_values(self):
+        # Init widget and layout
+        widget = QWidget()
+        over_layout = QVBoxLayout(widget)
+        layout = QHBoxLayout()
+
+        starting_value = {}
+        # Set all test value to 0
+        """for x in self.Valves:
+            starting_value[x] = 0"""
+
+        # Init table and labels
+        #self.table_R = table_controlller.Controller_Spread(labels=self.config["VALVES"], colorMap=self.colorMap)
+        label = misc.label_maker("Test Check", size=15, weight=QFont.Weight.DemiBold)
+        self.cur_sens = misc.label_maker("Inactive")
+        #self.table_R.update_states(states=starting_value)
+
+        # Initialize test logic
+        #self.test = test_logic.ClickTest_logic(esp_client=self.esp32_client)
+
+        # Layout
+        over_layout.addWidget(label)
+       # layout.addLayout(self.table_R)
+        layout.addStretch(1)
+        layout.addWidget(self.cur_sens)
+        layout.addStretch(2)
+        over_layout.addLayout(layout)
+        widget.setLayout(over_layout)
+
+        return widget
+
+    def start_test_section(self):
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+
+        # Start Button
+        self.start_b = QPushButton("Start Test")
+        self.start_b.resize(50, 75)
+        self.start_b.setStyleSheet('background-color: #BF1F0C; color: White')
+        #self.start_b.clicked.connect(test_logic.ClickTest_logic(esp_client=self.esp32_client ))
+
+        # Layout
+        layout.addWidget(self.start_b)
+        widget.setLayout(layout)
+
+        return widget
+
+    def update_tables(self, data=None, confirmed=None):
+        """Update the tables as data comes in (left) and as tests are confirmed (right)"""
+        self.table_R.update_states(states=confirmed)
+        self.table_L.update_states(states=data)
 
 class LeakTestLayout(QWidget):
-    def __init__(self, home_page_instance, esp32_client):
+    def __init__(self, home_page_instance, esp32_client, sensors):
         super().__init__()
         self.home_page = home_page_instance
         layout = QVBoxLayout()

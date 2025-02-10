@@ -11,7 +11,7 @@ class ESP32Client(QObject):
     """Handles ESP32 connection, listening, and sending commands."""
     message_received = pyqtSignal(dict)  # Signal to update GUI when a new message is received
     connection_status = pyqtSignal(bool)  # Signal to update connection status in GUI
-
+    confirmed_check = pyqtSignal(bool)
 
     def __init__(self, ip, port):
         super().__init__()
@@ -36,6 +36,8 @@ class ESP32Client(QObject):
 
     def connect_to_esp32(self):
         """Establish connection to ESP32."""
+        self.stop()
+
         if self.is_esp32_connected():
             if self.client is None:
                 try:
@@ -60,47 +62,56 @@ class ESP32Client(QObject):
 
 
         while self.running:
-            if self.client:
-                try:
-                    response = self.client.recv(1024).decode()
-                    if response:
+            if not self.client:
+                break
 
-                        try:
-                            raw_data = dict(json.loads(response))
-                            #misc.event_logger("DEBUG", "SYSTEM", f"Raw sensor data: {raw_data}")
+            try:
+                response = self.client.recv(1024).decode()
 
-                            # Store the new calibrated data being created for emitting
-                            calibrated_data = {}
 
-                            for sensor, value in raw_data.items():
-                                if sensor in formulas:
+                if response:
+                    # check if there is test in the data
+                    if "TEST" in response.keys():
+                        # Get test info (should be a dict)
+                        valve_data = response["TEST"]
+                        self.confirmed_check.emit(valve_data)
 
-                                    try:
-                                        # Pass through correct calibration equation
-                                        calib_val = self.calibrator.compute(name=sensor, xvalue=value)
-                                        # Add it to list
-                                        calibrated_data[sensor] = calib_val
-                                    except Exception as e:
-                                        misc.event_logger("ERROR", "SYSTEM", f"listen - Calibration failed for {sensor}:{e}")
-                                        calibrated_data[sensor] = value
-                                else:
+                    try:
+                        raw_data = dict(json.loads(response))
+                        #misc.event_logger("DEBUG", "SYSTEM", f"Raw sensor data: {raw_data}")
+
+                        # Store the new calibrated data being created for emitting
+                        calibrated_data = {}
+
+                        for sensor, value in raw_data.items():
+                            if sensor in formulas:
+
+                                try:
+                                    # Pass through correct calibration equation
+                                    calib_val = self.calibrator.compute(name=sensor, xvalue=value)
+                                    # Add it to list
+                                    calibrated_data[sensor] = calib_val
+                                except Exception as e:
+                                    misc.event_logger("ERROR", "SYSTEM", f"listen - Calibration failed for {sensor}:{e}")
                                     calibrated_data[sensor] = value
+                            else:
+                                calibrated_data[sensor] = value
 
-                            #misc.event_logger("DEBUG", "SYSTEM", f"Calibrated Data: {calibrated_data}")
-                            # Emits structured, calibrated data to update table
-                            self.message_received.emit(calibrated_data)
+                        #misc.event_logger("DEBUG", "SYSTEM", f"Calibrated Data: {calibrated_data}")
+                        # Emits structured, calibrated data to update table
+                        self.message_received.emit(calibrated_data)
 
-                        except json.JSONDecodeError as e:
-                            misc.event_logger("WARNING", "SYSTEM", f"Recieved malformed data: {e}")
+                    except json.JSONDecodeError as e:
+                        misc.event_logger("WARNING", "SYSTEM", f"Recieved malformed data: {e}")
 
 
-                except Exception as e:
-                    misc.event_logger("ERROR", "SYSTEM", f"Connection Lost: {e}")
-                    self.connection_status.emit(False)
-                    self.client = None
-                    break  # Stop listening if connection is lost
+            except Exception as e:
+                misc.event_logger("ERROR", "SYSTEM", f"Connection Lost: {e}")
+                self.connection_status.emit(False)
+                self.client = None
+                break  # Stop listening if connection is lost
 
-    def send_command(self, message):
+    def send_command(self, message, test=False):
         """Send command to ESP32."""
         if self.client:
             try:
@@ -121,6 +132,6 @@ class ESP32Client(QObject):
             self.client = None
             self.connection_status.emit(False)
 
-        if self.listener_thread and self.listener_thread.is_alive():
+        if self.listener_thread:
             self.listener_thread.join(timeout=2)
             self.listener_thread = None
