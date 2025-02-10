@@ -68,17 +68,16 @@ class ESP32Client(QObject):
             try:
                 response = self.client.recv(1024).decode()
 
-
                 if response:
                     # check if there is test in the data
                     if "TEST" in response.keys():
                         # Get test info (should be a dict)
                         valve_data = response["TEST"]
                         self.confirmed_check.emit(valve_data)
+                        continue
 
                     try:
                         raw_data = dict(json.loads(response))
-                        #misc.event_logger("DEBUG", "SYSTEM", f"Raw sensor data: {raw_data}")
 
                         # Store the new calibrated data being created for emitting
                         calibrated_data = {}

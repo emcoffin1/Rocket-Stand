@@ -29,6 +29,7 @@ class MainWindow(QMainWindow):
 
         # Init esp32 server
         config = load_json("config.json")
+
         self.esp_client = wifi.ESP32Client(ip=config["ESP32_IP"], port=config["PORT"])
 
         # Create Tabs
@@ -36,7 +37,7 @@ class MainWindow(QMainWindow):
         self.fire_tab = FireTab(self.home_page, self.esp_client,sensors=config["SENSORS"], valves=config["VALVES"],
                                 colormap=config["Valve_ColorMap"])
         self.test_tab = TestTab(self.home_page, self.esp_client,
-                                sensors=config["SENSORS"], valves=config["VALVES"], colormap=config["Valve_ColorMap"])
+                                config=config, colormap=config["Valve_ColorMap"])
         self.graphs_tab = ValuesTab(self.home_page, self.esp_client)
         self.connections_tab = ConnectionsTab(self.home_page, self.esp_client)
 
@@ -132,11 +133,13 @@ class FireTab(QWidget):
             self.stacked.setCurrentIndex(0)
 
 class TestTab(QWidget):
-    def __init__(self, home_page_instance, esp32_client, sensors, valves, colormap):
+    def __init__(self, home_page_instance, esp32_client, config, colormap):
         super().__init__()
         layout = QVBoxLayout()
         self.esp32_client = esp32_client
         self.home_page = home_page_instance
+        self.config = config
+
 
         # Dropdown Menu to switch between tests
         self.dropdown = QComboBox()
@@ -148,8 +151,8 @@ class TestTab(QWidget):
 
         # All widgets should be in a stacked_widget
         self.stacked_widget = QStackedWidget()
-        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page, esp32_client, valves, colormap))
-        self.stacked_widget.addWidget(engine_tests.LeakTestLayout(self.home_page, esp32_client, sensors))
+        self.stacked_widget.addWidget(engine_tests.ClickTestLayout(self.home_page, esp32_client, config=self.config, colormap=colormap))
+        self.stacked_widget.addWidget(engine_tests.LeakTestLayout(self.home_page, esp32_client, config=self.config))
         layout.addWidget(self.stacked_widget)
 
         self.setLayout(layout)
