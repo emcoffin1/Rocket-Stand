@@ -14,6 +14,7 @@ class Table(QTableWidget):
         self.setColumnCount(1)
         self.setMaximumWidth(200)
         self.labels = {}
+
         for index, items in enumerate(labels):
             self.labels[items] = index
 
@@ -24,7 +25,6 @@ class Table(QTableWidget):
         # Top Header Remover
         self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.horizontalHeader().setVisible(False)
-
 
     def update_table(self, calibrated_data):
         """Updates table as new value arrive"""
@@ -54,11 +54,13 @@ class Table(QTableWidget):
 
 
 class Controller_Spread(QFormLayout):
-    def __init__(self, labels: list, colorMap):
+    def __init__(self, labels: list, colorMap, enabled=True):
         super().__init__()
         self.colorMap = colorMap
+        self.enabled = enabled
 
         self.lab_val = {}
+
         # Sensor, Checkbox State
         for sensor in labels:
             box = QPushButton()
@@ -66,10 +68,12 @@ class Controller_Spread(QFormLayout):
             box.setMinimumSize(30, 30)
             box.setMaximumSize(30,30)
             box.setStyleSheet(f"background-color: yellow")
+            box.setEnabled(self.enabled)
             label = QLabel(sensor)
             label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
             self.lab_val[sensor] = box
             self.addRow(label, box)
+
 
 
     def update_states(self, states: dict, colorMap=None):

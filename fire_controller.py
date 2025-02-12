@@ -65,7 +65,7 @@ class FireController(QWidget):
         left_layout = QHBoxLayout(left_widget)
 
         # Add controller panel
-        self.controller_table = table_controlller.Controller_Spread(self.Valves, colorMap=self.ColorMap)
+        self.controller_table = table_controlller.Controller_Spread(self.Valves, colorMap=self.ColorMap, enabled=False)
 
         # Format layout
         left_layout.addLayout(self.controller_table)
@@ -94,16 +94,36 @@ class FireController(QWidget):
         # Init layout and widget
         bottom_widget = QWidget()
         bottom_layout = QHBoxLayout(bottom_widget)
+        left_b_layout = QVBoxLayout()
 
         # Add items
+
+        # Arm signals
+        arm_label = misc.label_maker("ARM", size=10)
+        self.arm1 = QPushButton("Disarmed")
+        self.arm2 = QPushButton("Disarmed")
+        self.arm1.setStyleSheet("background-color: red")
+        self.arm2.setStyleSheet("background-color: red")
+        self.arm1.setMaximumSize(30, 30)
+        self.arm2.setMaximumSize(30, 30)
+
+        # Fire button
         self.fire_button = QPushButton("FIRE")
         self.fire_button.setStyleSheet("background-color: red")
         self.fire_button.setFont(QFont("Arial", 20, QFont.Weight.DemiBold))
         self.fire_button.setMinimumSize(50,50)
+        self.fire_button.setEnabled(False)
+
+        # Time clock
         self.test = misc.countTimer("down", 5)
         self.fire_button.clicked.connect(self.count_down)
 
         # Format layout
+        left_b_layout.addWidget(arm_label)
+        left_b_layout.addWidget(self.arm1)
+        left_b_layout.addWidget(self.arm2)
+        left_b_layout.addStretch(1)
+        bottom_layout.addLayout(left_b_layout)
         bottom_layout.addWidget(self.fire_button)
         bottom_layout.addWidget(self.test)
         bottom_widget.setLayout(bottom_layout)
@@ -122,6 +142,31 @@ class FireController(QWidget):
         self.fire_button.setText("FIRE")
         self.fire_button.setStyleSheet("background-color: red")
         self.fire_button.clicked.connect(self.count_down)
+
+    def change_armed_state(self, switch: dict):
+        """Changes armed state of a specific arm switch"""
+        # S value (unarmed)
+        state = {"PAD": 0, "LCC": 0}
+
+        # Will perform both even if both triggered at same time
+        # Determines current state and switches
+        if "PAD" in switch.keys() and state["PAD"] == 0:
+            self.arm1.setStyleSheet("background-color:green")
+            state["PAD"] = 1
+        elif "PAD" in switch.keys() and state["PAD"] != 0:
+            self.arm1.setStyleSheet("background-color:red")
+            state["PAD"] = 0
+        if "LCC" in switch.keys() and state["LCC"] == 0:
+            self.arm2.setStyleSheet("background-color:green")
+            state["LCC"] = 1
+        elif "LCC" in switch.keys() and state["LCC"] != 0:
+            self.arm2.setStyleSheet("background-color:red")
+            state["LCC"] = 0
+
+        # Determine if fire is available
+        if state["PAD"] == 1 and state["LCC"] == 1:
+            self.fire_button.setEnabled(True)
+
 
 
 class FireLogin(QWidget):

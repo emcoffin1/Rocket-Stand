@@ -83,7 +83,8 @@ class ClickTestLayout(QWidget):
         # Init table and text
         label = misc.label_maker("Position", size=15, weight=QFont.Weight.DemiBold)
 
-        self.table_L = table_controlller.Controller_Spread(labels=self.config["VALVES"], colorMap=self.altMap)
+        self.table_L = table_controlller.Controller_Spread(labels=self.config["VALVES"],
+                                                           colorMap={"red": 0, "yellow": 1, "green": 2})
 
         # Make layout
         layout.addWidget(label)
