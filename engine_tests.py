@@ -98,16 +98,16 @@ class ClickTestLayout(QWidget):
         over_layout = QVBoxLayout(widget)
         layout = QHBoxLayout()
 
-        starting_value = {}
+        self.starting_value = {}
         # Set all test value to 0
         for x in self.config["VALVES"]:
-            starting_value[x] = 0
+            self.starting_value[x] = 0
 
         # Init table and labels
         self.table_R = table_controlller.Controller_Spread(labels=self.config["VALVES"], colorMap=self.colorMap)
         label = misc.label_maker("Test Check", size=15, weight=QFont.Weight.DemiBold)
         self.cur_sens = misc.label_maker("Inactive")
-        self.table_R.update_states(states=starting_value)
+        self.table_R.update_states(states=self.starting_value)
 
 
         # Layout
@@ -130,6 +130,8 @@ class ClickTestLayout(QWidget):
         self.start_b.resize(50, 75)
         self.start_b.setStyleSheet('background-color: #BF1F0C; color: White')
         self.start_b.clicked.connect(self.run_test)
+        self.status = "Test"
+
 
         # Layout
         layout.addWidget(self.start_b)
@@ -144,7 +146,18 @@ class ClickTestLayout(QWidget):
 
     def run_test(self):
         """Begin Running the test"""
-        self.test.start_test()
+        if self.status == "Test":
+            self.start_b.setEnabled(False)
+            misc.event_logger("TEST", "SYSTEM", "Click Test Started")
+            self.test.start_test()
+            self.start_b.setText("Reset")
+            self.status = "Reset"
+            self.start_b.setEnabled(True)
+            
+        elif self.status == "Reset":
+            self.start_b.setText("Start Test")
+            self.status = "Test"
+            self.test.reset_test()
 
 
 class LeakTestLayout(QWidget):

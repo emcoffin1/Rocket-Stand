@@ -11,7 +11,8 @@ class ESP32Client(QObject):
     """Handles ESP32 connection, listening, and sending commands."""
     message_received = pyqtSignal(dict)  # Signal to update GUI when a new message is received
     connection_status = pyqtSignal(bool)  # Signal to update connection status in GUI
-    confirmed_check = pyqtSignal(bool)
+    test_active = pyqtSignal(bool)
+    arm_stand = pyqtSignal(bool)
 
     def __init__(self, ip, port):
         super().__init__()
@@ -69,15 +70,24 @@ class ESP32Client(QObject):
                 response = self.client.recv(1024).decode()
 
                 if response:
-                    # check if there is test in the data
-                    if "TEST" in response.keys():
-                        # Get test info (should be a dict)
-                        valve_data = response["TEST"]
-                        self.confirmed_check.emit(valve_data)
-                        continue
 
                     try:
+
                         raw_data = dict(json.loads(response))
+
+                        # check if there is test in the data
+                        if "TEST" in raw_data.keys():
+                            # Get test info (should be a dict)
+                            valve_data = raw_data["TEST"]
+                            # Emit test type, valve
+                            self.test_active.emit(raw_data["TEST"][1], raw_data["TEST"][2])
+                            continue
+
+                        if raw_data["ARM"] == True:
+                            # Check if pad is armed
+                            armed = True
+                            self.arm_stand.emit(armed)
+
 
                         # Store the new calibrated data being created for emitting
                         calibrated_data = {}
@@ -96,7 +106,6 @@ class ESP32Client(QObject):
                             else:
                                 calibrated_data[sensor] = value
 
-                        #misc.event_logger("DEBUG", "SYSTEM", f"Calibrated Data: {calibrated_data}")
                         # Emits structured, calibrated data to update table
                         self.message_received.emit(calibrated_data)
 

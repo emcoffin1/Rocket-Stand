@@ -1,0 +1,5 @@
+Timestamp,User,Event,Comments
+2025-02-14 22:44:25,    SYSTEM    ,    Program Started,    
+2025-02-14 22:44:33,    SYSTEM    ,    TEST,    Click Test Started
+2025-02-14 22:44:38,    SYSTEM    ,    TEST,    Click Test Started
+2025-02-14 22:44:40,    SYSTEM    ,    Program End,    

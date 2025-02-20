@@ -8,7 +8,8 @@ class ClickTest_logic:
     def __init__(self, esp_client, config: dict, tables, label, colorMap):
         super().__init__()
         # Pass through: esp, tables to be updated, valves for test
-        self.esp_client = box_overlay_example.MockESP32Client()
+        #self.esp_client = box_overlay_example.MockESP32Client()
+        self.esp_client = esp_client
         self.config = config
         self.tables = tables
         self.valves = self.config["VALVES"]
@@ -17,7 +18,7 @@ class ClickTest_logic:
         self.iterations = 0
 
         # Listen for response
-        self.esp_client.confirmed_check.connect(self.handle_response)
+        self.esp_client.test_active.connect(self.handle_response)
 
         # Better list
         self.command_que = iter(self.valves)
@@ -28,29 +29,20 @@ class ClickTest_logic:
         for x in self.valves:
             self.state[x] = 0
 
+    def reset_test(self):
+        """Resets test to original values"""
+        for x in self.valves:
+            self.state[x] = 0
+        self.tables.update_states(states=self.state, colorMap=self.colorMap)
+
     def start_test(self):
         """When initialized, test begins"""
-        if self.iterations < 2:
-            self.iterations += 1
-            print("attempt: ", self.iterations)
-            try:
-               self.process_next()
+        try:
+            self.process_next()
 
-            except Exception as e:
-                misc.event_logger("DEBUG", "ClickTest", f'startTest: {e}')
-        else:
-            print("restarting test sequence")
-            try:
-                self.iterations = 0
-                self.command_que = iter(self.valves)
-                self.current_valve = None
-                for x in self.valves:
-                    self.state[x] = 0
-                print(self.state)
-                self.tables.update_states(states=self.state, colorMap=self.colorMap)
-                self.start_test()
-            except Exception as e:
-                misc.event_logger("DEBUG", "ClickTest", f'startTest2: {e}')
+        except Exception as e:
+            misc.event_logger("DEBUG", "ClickTest", f'startTest: {e}')
+
 
     def process_next(self):
         """Processes next valve when trigger received"""
